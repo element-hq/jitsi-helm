@@ -75,6 +75,14 @@ web:
   welcomePageFooter: false
   ## kubectl create configmap -n <namespace> watermark --from-file=watermark.png
   customWatermark: false
+
+  nginx:
+    port: 80
+
+    tls:
+      enable: false
+      port: 443
+
   resources:
     requests:
       cpu: 400m
