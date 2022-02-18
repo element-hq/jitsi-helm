@@ -49,7 +49,7 @@ shift "$((OPTIND-1))"
 
 # Get PID from supervisor if no PID was provided
 if [ "$pid" = "" ] ;then
-    pid=`s6-svstat -o pid /var/run/s6/services/jvb`
+    pid="$(supervisorctl pid jvb)"
 fi
 
 # Check if PID is a number
@@ -83,9 +83,10 @@ if [ "$shutdownStatus" == "200" ]
 then
   printInfo "Graceful shutdown started"
 
-  # turn off automatic restart of JVB service
-  s6-svc -O /var/run/s6/services/jvb
-
+  # Disable autorestart for jvb
+  sed -i 's/autorestart=true/autorestart=false/etc/supervisor/conf.d/10_jvb.conf'
+  supervisorctl reread
+  
   confCount=`getConferenceCount`
   while [[ $confCount -gt 0 ]] ; do
     printInfo "There are still $confCount conferences"
