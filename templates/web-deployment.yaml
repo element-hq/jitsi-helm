@@ -76,6 +76,17 @@ spec:
         readinessProbe:
           httpGet:
             port: {{ $.Values.web.nginx.port | int | default 80 }}
+      {{ if $.Values.web.healthcheckEnable -}}
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - /usr/bin/supervisor-check
+          initialDelaySeconds: 15
+          failureThreshold: 3
+          periodSeconds: 5
+          successThreshold: 1
+      {{ end -}}
       {{- with $.Values.web.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
