@@ -1,8 +1,4 @@
 global:
-  # Uncomment and set these if you need to use privileged
-  # service accounts for s6-overlay's UID/GID switching
-  # at initialization time
-
   # serviceAccount: "default"
   # metacontrollerServiceAccount: "metacontroller"
 
@@ -26,6 +22,7 @@ jicofo:
   name: jicofo
   image: jitsi/jicofo:stable-6826
   imagePullPolicy: Always
+  helathcheckEnable: true
   resources:
     requests:
       cpu: 400m
@@ -41,6 +38,7 @@ jvb:
   image: jitsi/jvb:stable-6826
   imagePullPolicy: Always
   monitoringEnable: true
+  helathcheckEnable: true
   sysctlDaemonSetEnable: true
   resources:
     requests:
@@ -52,6 +50,13 @@ prosody:
   image: jitsi/prosody:stable-6826
   imagePullPolicy: Always
   monitoringEnable: true
+  helathcheckEnable: true
+  
+  # Run the prosody pod as an unprivileged user with GID 0
+  # Disable if you're deploying to an environment where user is handled for you
+  # i.e. Openshift
+  runUnprivileged: true
+
   resources:
     requests:
       memory: 300Mi
@@ -75,6 +80,7 @@ web:
   welcomePageFooter: false
   ## kubectl create configmap -n <namespace> watermark --from-file=watermark.png
   customWatermark: false
+  helathcheckEnable: true
 
   nginx:
     port: 80
@@ -87,6 +93,7 @@ web:
     requests:
       cpu: 400m
       memory: 300Mi
+      
   extraEnvs: []
   extraVolumes: []
   extraVolumeMounts: []
