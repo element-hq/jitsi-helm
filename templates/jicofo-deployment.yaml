@@ -31,8 +31,8 @@ spec:
     {{- with $.Values.jicofo.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- if $.Values.global.serviceAccount }}
-      serviceAccountName: {{ $.Values.global.serviceAccount }}
+    {{- if (($.Values.global).serviceAccount) }}
+      serviceAccountName: {{ (($.Values.global).serviceAccount) }}
     {{- end }}
       containers:
       - env:
@@ -75,6 +75,17 @@ spec:
         #   httpGet:
         #     path: /about/health
         #     port: 8888
+      {{ if $.Values.jicofo.healthcheckEnable -}}
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - /usr/bin/supervisor-check
+          initialDelaySeconds: 15
+          failureThreshold: 3
+          periodSeconds: 5
+          successThreshold: 1
+        {{ end -}}
       {{- with $.Values.jicofo.resources }}
         resources:
           {{- toYaml . | nindent 10 }}

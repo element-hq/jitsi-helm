@@ -36,8 +36,8 @@ spec:
     {{- with $.Values.prosody.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- if $.Values.global.serviceAccount }}
-      serviceAccountName: {{ $.Values.global.serviceAccount }}
+    {{- if (($.Values.global).serviceAccount) }}
+      serviceAccountName: {{ (($.Values.global).serviceAccount) }}
     {{- end }}
       volumes:
         - name: prosody
@@ -53,6 +53,11 @@ spec:
       {{- if $.Values.prosody.extraVolumes }}
         {{- toYaml $.Values.prosody.extraVolumes | nindent 8 }}
       {{- end }}
+      {{ if $.Values.prosody.runUnprivileged -}}
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 0
+      {{ end -}}
       containers:
         - name: prosody
         {{- with $.Values.prosody.resources }}
@@ -65,6 +70,17 @@ spec:
           ports:
             - name: metrics
               containerPort: 5280
+          {{ end -}}
+          {{ if $.Values.prosody.healthcheckEnable -}}
+          livenessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /usr/bin/supervisor-check
+            initialDelaySeconds: 15
+            failureThreshold: 3
+            periodSeconds: 5
+            successThreshold: 1
           {{ end -}}
           readinessProbe:
             ## the command that is called obeys standard exit codes

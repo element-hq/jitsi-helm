@@ -65,9 +65,9 @@ spec:
       {{ end -}}
       - args:
         - "{{ $.Values.jvb.nodeportPrefix }}{{ add $shard 3 }}00"
-        - /init
+        - /entrypoint
         command:
-        - /entrypoint/entrypoint.sh
+        - /k8s/entrypoint.sh
         env:
         - name: NODE_NAME
           valueFrom:
@@ -129,12 +129,23 @@ spec:
             exec:
               command:
               - bash
-              - /shutdown/graceful_shutdown.sh
+              - /usr/bin/graceful_shutdown
               - -t 3
         name: jvb
         ports:
         - containerPort: 9090
           name: websocket
+        {{ if $.Values.jvb.healthcheckEnable -}}
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - /usr/bin/supervisor-check
+          initialDelaySeconds: 15
+          failureThreshold: 3
+          periodSeconds: 5
+          successThreshold: 1
+        {{ end -}}
         readinessProbe:
           httpGet:
             path: /about/health
@@ -145,10 +156,8 @@ spec:
           {{- toYaml . | nindent 10 }}
       {{- end }}
         volumeMounts:
-        - mountPath: /entrypoint
+        - mountPath: /k8s
           name: jvb-entrypoint
-        - mountPath: /shutdown
-          name: jvb-shutdown
       terminationGracePeriodSeconds: 2147483647
       volumes:
       - configMap:

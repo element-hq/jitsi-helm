@@ -32,15 +32,17 @@ spec:
       {{- toYaml . | nindent 6 }}
     {{- end }}
 
-    {{- if $.Values.global.serviceAccount }}
-      serviceAccountName: {{ $.Values.global.serviceAccount }}
+    {{- if (($.Values.global).serviceAccount) }}
+      serviceAccountName: {{ (($.Values.global).serviceAccount) }}
     {{- end }}
       containers:
       - env:
         - name: DISABLE_HTTPS
-          value: "1"
+          value: "{{ $.Values.web.nginx.tls.enable | default "0" }}"
         - name: HTTP_PORT
-          value: "80"
+          value: "{{ $.Values.web.nginx.port | default "80" }}"
+        - name: HTTPS_PORT
+          value: "{{ $.Values.web.nginx.tls.port | default "443" }}"
         - name: XMPP_SERVER
           value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Values.namespace }}.svc.cluster.local
         - name: JICOFO_AUTH_USER
@@ -73,7 +75,18 @@ spec:
         name: web
         readinessProbe:
           httpGet:
-            port: 80
+            port: {{ $.Values.web.nginx.port | int | default 80 }}
+      {{ if $.Values.web.healthcheckEnable -}}
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - /usr/bin/supervisor-check
+          initialDelaySeconds: 15
+          failureThreshold: 3
+          periodSeconds: 5
+          successThreshold: 1
+      {{ end -}}
       {{- with $.Values.web.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
