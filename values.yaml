@@ -95,7 +95,7 @@ web:
   extraPodSpec: {}
   extraVolumes: []
   extraVolumeMounts: []
-sysctl-jvb:
+sysctljvb:
   image: alpine:3.15
   imagePullPolicy: Always
 
