@@ -46,6 +46,9 @@ jvb:
   image: ghcr.io/matrix-org/docker-jitsi-meet/jvb:stable-7648-3-ems.1
   imagePullPolicy: Always
   monitoringEnable: true
+  monitoring:
+    image: systemli/prometheus-jitsi-meet-exporter:1.2.0
+    imagePullPolicy: Always
   sysctlDaemonSetEnable: true
   # In most k8s environments this will be a private IP and in most deployments, users will connect to a public ip
   # so this won't provide a usable IP for users to connect to.
