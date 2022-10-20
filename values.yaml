@@ -1,26 +1,27 @@
 global:
   # serviceAccount: "default"
-  # metacontrollerServiceAccount: "metacontroller"
 
 shardCount: 1
 namespace: jitsi
 
-# extraPodSpec can be used to add tolerations and placement hints
-# to any of the following components
+ingress:
+  enabled: true
+  hosts: []
+  # class:
+  tls:
+    enabled: true
+    secretName: jitsi-tls
+    # certManagerClusterIssuer
+  annotations: {}
+  extraPaths: []
 
 haproxy:
   name: haproxy
   image: haproxy:2.4
-  ingressEnable: true
-  ingress:
-    # can be alb
-    class: haproxy
-    host: jitsi.example.org
-    tlsEnable: true
-    # albGroup: global
+  extraPodSpec: {}
 jicofo:
   name: jicofo
-  image: jitsi/jicofo:stable-6826
+  image: jitsi/jicofo:stable-7648-3
   imagePullPolicy: Always
   helathcheckEnable: true
   resources:
@@ -28,26 +29,38 @@ jicofo:
       cpu: 400m
       memory: 400Mi
   extraEnvs: []
+  extraPodSpec: {}
 jvb:
   name: jvb
   replicas: 2
+  # Specify hostPort to use hostPort and not nodePort
   # Nodeports 30XXX will be used by default
   # you can use this variable to have several Jitsi cluster running on a cluster
   # specifying "31" will use ports 31XXX
   nodeportPrefix: "30"
-  image: jitsi/jvb:stable-6826
+  # For https://github.com/jitsi/docker-jitsi-meet/pull/1379
+  # This can go back to upstream in the next Jitsi release as it has been merged
+  image: ghcr.io/matrix-org/docker-jitsi-meet/jvb:stable-7648-3-ems.1
   imagePullPolicy: Always
   monitoringEnable: true
   helathcheckEnable: true
+  monitoring:
+    image: systemli/prometheus-jitsi-meet-exporter:1.2.0
+    imagePullPolicy: Always
   sysctlDaemonSetEnable: true
+  # In most k8s environments this will be a private IP and in most deployments, users will connect to a public ip
+  # so this won't provide a usable IP for users to connect to.
+  # Will rely on STUN providing the correct public IP if set to false.
+  provideNodeAddressAsPublicIP: false
   resources:
     requests:
       cpu: 3000m
       memory: 3000Mi
   extraEnvs: []
+  extraPodSpec: {}
 prosody:
   name: prosody
-  image: jitsi/prosody:stable-6826
+  image: jitsi/prosody:stable-7648-3
   imagePullPolicy: Always
   monitoringEnable: true
   helathcheckEnable: true
@@ -62,13 +75,15 @@ prosody:
       memory: 300Mi
       cpu: 300m
   extraEnvs: []
+  extraPodSpec: {}
   extraVolumes: []
   extraVolumeMounts: []
   globalModules: []
   globalConfig: []
 web:
   name: web
-  image: jitsi/web:stable-6826
+  replicas: 2
+  image: jitsi/web:stable-7648-3
   imagePullPolicy: Always
   ## kubectl create configmap -n <namespace> custom-config --from-file=custom-config.js
   customConfig: false
@@ -95,12 +110,12 @@ web:
       memory: 300Mi
       
   extraEnvs: []
+  extraPodSpec: {}
   extraVolumes: []
   extraVolumeMounts: []
-
-# if empty, the metacontroller will not be installed
-# can be used to instantiate several Jitsi clusters on one Kubernetes cluster
-metacontrollerNamespace: metacontroller
+sysctljvb:
+  image: alpine:3.15
+  imagePullPolicy: Always
 
 createSecret: true
 JICOFO_AUTH_PASSWORD: ""

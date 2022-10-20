@@ -58,12 +58,14 @@ The following table lists the configurable parameters of the Jitsi Meet chart an
 |------------------------------------|---------------------------------------------------------|-------------------|
 | `shardCount`                       | Number of shards                                        | `2`               |
 | `namespace`                        | Namespace                                               | `jitsi`           |
-| `metacontrollerNamespace`          | Namespace of the metacontroller. Empty if not deployed. | `metacontroller`  |
 | `haproxy.name`                     | Haproxy statefulset name                                | `jitsi/jicofo`    |
 | `haproxy.image`                    | Docker image                                            | `haproxy:2.1`     |
-| `haproxy.ingressEnable`            | Enable ingress                                          | `true`            |
-| `haproxy.ingress.host`             | Ingress host                                            | `jitsi.domain.org`|
-| `haproxy.ingress.tlsEnable`        | Enable TLS for ingress                                  | `true`            |
+| `ingress.enabled`                  | Enable ingress                                          | `true`            |
+| `ingress.hosts`                    | List of hosts in this ingress                           | empty             |
+| `ingress.class  `                  | Which ingressClassName to use                           | empty             |
+| `ingress.tls.enabled`              | Enable TLS for ingress                                  | `true`            |
+| `ingress.tls.secretName`           | Name of the secret storing the TLS certificate and key  | `jitsi-tls`       |
+| `ingress.extraPaths    `           | Extra paths to add to the ingress                       | `[]`              |
 | `jicofo.name`                      | Jicofo deployment name                                  | `jicofo`          |
 | `jicofo.image`                     | Jicofo docker image                                     | `jitsi/jicofo`    |
 | `jicofo.imagePullPolicy`           | Jicofo image pull policy                                | `Always`          |
@@ -73,6 +75,7 @@ The following table lists the configurable parameters of the Jitsi Meet chart an
 | `jvb.image.imagePullPolicy`        | JVB image pull policy                                   | `Always`          |
 | `jvb.replicas`                     | JVB replica count                                       | `1`               |
 | `jvb.monitoringEnable`             | JVB exporter container                                  | `true`            |
+| `jvb.hostPort`                     | JVB hostPort                                            | empty             |
 | `jvb.nodeportPrefix`               | JVB Node port prefix                                    | `30`              |
 | `jvb.extraEnvs`                    | JVB extra environment variables                         | `[]`              |
 | `prosody.name`                     | Prosody deployment name                                 | `jitsi/prosody`   |
@@ -93,7 +96,6 @@ The following table lists the configurable parameters of the Jitsi Meet chart an
 
 ## Running two jitsi instances inside the same cluster
 
-1. The first instance should be deployed with the metacontroller
-2. The second instance should be deployed with specific settings : 
-  - `metacontrollerNamespace` should be kept empty to avoid deploying a second metacontroller
-  - `jvb.nodeportPrefix` should use a different value from `30` to avoid ports conflicts
+1. The second instance should be deployed with specific settings :
+  - `jvb.nodeportPrefix` should use a different value from `30` to avoid ports conflicts or
+  - `jvb.hostPort` that's distinct from other installations

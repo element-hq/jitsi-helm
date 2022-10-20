@@ -1,3 +1,4 @@
+{{ if (gt ($.Values.shardCount | int) 1) -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -15,6 +16,8 @@ spec:
     metadata:
       labels:
         k8s-app: {{ $.Values.haproxy.name }}
+      annotations:
+        checksum/config: {{ tpl (.Files.Get "configs/haproxy/haproxy.cfg") . | sha256sum }}
     spec:
     {{- with $.Values.haproxy.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
@@ -48,6 +51,14 @@ spec:
           name: metrics
         - containerPort: 1024
           name: peering
+        readinessProbe:
+          httpGet:
+            path: /stats
+            port: metrics
+        startupProbe:
+          httpGet:
+            path: /stats
+            port: metrics
         volumeMounts:
         - mountPath: /usr/local/etc/haproxy/haproxy.cfg
           name: haproxy-config
@@ -63,3 +74,4 @@ spec:
             path: haproxy.cfg
           name: haproxy-config
         name: haproxy-config
+{{ end -}}

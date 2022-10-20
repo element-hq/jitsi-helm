@@ -9,9 +9,6 @@ metadata:
     shard: {{ $shard | quote }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}
   namespace: {{ $.Values.namespace }}
-  # needed for metacontroller to create/delete service per pod
-  annotations:
-    jitsi-service-per-pod-label: "statefulset.kubernetes.io/pod-name"
 spec:
   podManagementPolicy: Parallel
   replicas: {{ $.Values.jvb.replicas }}
@@ -27,8 +24,9 @@ spec:
         k8s-app: {{ $.Values.jvb.name }}
         scope: jitsi
         shard: {{ $shard | quote }}
-      {{ if $.Values.jvb.monitoringEnable }}
       annotations:
+        kubectl.kubernetes.io/default-container: jvb
+      {{ if $.Values.jvb.monitoringEnable }}
         prometheus.io/scrape: "true"
         prometheus.io/port: "9888"
       {{ end }}
@@ -41,11 +39,11 @@ spec:
       - args:
         - -videobridge-url
         - http://localhost:8080/colibri/stats
-        image: systemli/prometheus-jitsi-meet-exporter:1.1.6
-        imagePullPolicy: Always
+        image: {{ $.Values.jvb.monitoring.image }}
+        imagePullPolicy: {{ $.Values.jvb.monitoring.imagePullPolicy }}
         livenessProbe:
           httpGet:
-            port: 9888
+            port: metrics
             path: "/health"
         name: prometheus-exporter
         ports:
@@ -53,7 +51,7 @@ spec:
           name: metrics
         readinessProbe:
           httpGet:
-            port: 9888
+            port: metrics
             path: "/health"
         resources:
           limits:
@@ -64,7 +62,9 @@ spec:
             memory: 100Mi
       {{ end -}}
       - args:
+      {{- if empty $.Values.jvb.hostPort }}
         - "{{ $.Values.jvb.nodeportPrefix }}{{ add $shard 3 }}00"
+      {{- end }}
         - /entrypoint
         command:
         - /k8s/entrypoint.sh
@@ -75,10 +75,12 @@ spec:
               fieldPath: metadata.name
         - name: XMPP_SERVER
           value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Values.namespace }}.svc.cluster.local
+      {{- if $.Values.jvb.provideNodeAddressAsPublicIP }}
         - name: DOCKER_HOST_ADDRESS
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
+      {{- end }}
         - name: XMPP_DOMAIN
           value: meet.jitsi
         - name: XMPP_AUTH_DOMAIN
@@ -90,8 +92,6 @@ spec:
             configMapKeyRef:
               key: JVB_STUN_SERVERS
               name: jitsi-config
-        - name: JVB_TCP_HARVESTER_DISABLED
-          value: "false"
         - name: COLIBRI_REST_ENABLED
           value: "true"
         - name: SHUTDOWN_REST_ENABLED
@@ -119,6 +119,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
+        - name: JVB_ADVERTISE_PRIVATE_CANDIDATES
+          value: "false"
       {{- if $.Values.jvb.extraEnvs }}
         {{- toYaml $.Values.jvb.extraEnvs | nindent 8 }}
       {{- end }}
@@ -134,7 +136,16 @@ spec:
         name: jvb
         ports:
         - containerPort: 9090
-          name: websocket
+          name: public-http
+        - containerPort: 8080
+          name: private-http
+          protocol: TCP
+      {{- if not (empty $.Values.jvb.hostPort) }}
+        - containerPort: {{ $.Values.jvb.hostPort }}
+          name: ice
+          hostPort: {{ $.Values.jvb.hostPort }}
+          protocol: UDP
+      {{- end }}
         {{ if $.Values.jvb.healthcheckEnable -}}
         livenessProbe:
           exec:
@@ -149,8 +160,11 @@ spec:
         readinessProbe:
           httpGet:
             path: /about/health
-            port: 8080
-          initialDelaySeconds: 10
+            port: private-http
+        startupProbe:
+          httpGet:
+            path: /about/health
+            port: private-http
       {{- with $.Values.jvb.resources }}
         resources:
           {{- toYaml . | nindent 10 }}

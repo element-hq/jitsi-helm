@@ -10,7 +10,7 @@ metadata:
   name: shard-{{ $shard }}-{{ $.Values.web.name }}
   namespace: {{ $.Values.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ $.Values.web.replicas }}
   selector:
     matchLabels:
       k8s-app: {{ $.Values.web.name }}
@@ -73,9 +73,10 @@ spec:
         image: {{ $.Values.web.image }}
         imagePullPolicy: {{ $.Values.web.imagePullPolicy }}
         name: web
-        readinessProbe:
-          httpGet:
-            port: {{ $.Values.web.nginx.port | int | default 80 }}
+        ports:
+        - containerPort: {{ $.Values.web.nginx.port | int | default 80 }}
+          protocol: TCP
+          name: http
       {{ if $.Values.web.healthcheckEnable -}}
         livenessProbe:
           exec:
@@ -87,6 +88,14 @@ spec:
           periodSeconds: 5
           successThreshold: 1
       {{ end -}}
+        readinessProbe:
+          httpGet:
+            path: /robots.txt
+            port: http
+        startupProbe:
+          httpGet:
+            path: /robots.txt
+            port: http
       {{- with $.Values.web.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
