@@ -23,7 +23,6 @@ jicofo:
   name: jicofo
   image: jitsi/jicofo:stable-7648-3
   imagePullPolicy: Always
-  helathcheckEnable: true
   resources:
     requests:
       cpu: 400m
@@ -43,7 +42,6 @@ jvb:
   image: ghcr.io/matrix-org/docker-jitsi-meet/jvb:stable-7648-3-ems.1
   imagePullPolicy: Always
   monitoringEnable: true
-  helathcheckEnable: true
   monitoring:
     image: systemli/prometheus-jitsi-meet-exporter:1.2.0
     imagePullPolicy: Always
@@ -63,8 +61,7 @@ prosody:
   image: jitsi/prosody:stable-7648-3
   imagePullPolicy: Always
   monitoringEnable: true
-  helathcheckEnable: true
-  
+
   # Run the prosody pod as an unprivileged user with GID 0
   # Disable if you're deploying to an environment where user is handled for you
   # i.e. Openshift
@@ -95,7 +92,6 @@ web:
   welcomePageFooter: false
   ## kubectl create configmap -n <namespace> watermark --from-file=watermark.png
   customWatermark: false
-  helathcheckEnable: true
 
   nginx:
     port: 80
@@ -108,7 +104,7 @@ web:
     requests:
       cpu: 400m
       memory: 300Mi
-      
+
   extraEnvs: []
   extraPodSpec: {}
   extraVolumes: []

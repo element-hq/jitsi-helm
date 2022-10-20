@@ -75,17 +75,14 @@ spec:
             protocol: TCP
             name: c2s
           {{ end -}}
-          {{ if $.Values.prosody.healthcheckEnable -}}
           livenessProbe:
+            ## the command that is called obeys standard exit codes
             exec:
               command:
-              - /bin/sh
-              - /usr/bin/supervisor-check
-            initialDelaySeconds: 15
-            failureThreshold: 3
-            periodSeconds: 5
-            successThreshold: 1
-          {{ end -}}
+                - prosodyctl
+                - --config
+                - /config/prosody.cfg.lua
+                - status
           readinessProbe:
             ## the command that is called obeys standard exit codes
             exec:

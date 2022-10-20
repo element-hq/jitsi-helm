@@ -146,17 +146,10 @@ spec:
           hostPort: {{ $.Values.jvb.hostPort }}
           protocol: UDP
       {{- end }}
-        {{ if $.Values.jvb.healthcheckEnable -}}
         livenessProbe:
-          exec:
-            command:
-            - /bin/sh
-            - /usr/bin/supervisor-check
-          initialDelaySeconds: 15
-          failureThreshold: 3
-          periodSeconds: 5
-          successThreshold: 1
-        {{ end -}}
+          httpGet:
+            path: /about/health
+            port: private-http
         readinessProbe:
           httpGet:
             path: /about/health

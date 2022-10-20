@@ -77,17 +77,10 @@ spec:
         - containerPort: {{ $.Values.web.nginx.port | int | default 80 }}
           protocol: TCP
           name: http
-      {{ if $.Values.web.healthcheckEnable -}}
         livenessProbe:
-          exec:
-            command:
-            - /bin/sh
-            - /usr/bin/supervisor-check
-          initialDelaySeconds: 15
-          failureThreshold: 3
-          periodSeconds: 5
-          successThreshold: 1
-      {{ end -}}
+          httpGet:
+            path: /robots.txt
+            port: http
         readinessProbe:
           httpGet:
             path: /robots.txt
