@@ -19,7 +19,7 @@ metadata:
     {{- if $.Values.ingress.annotations }}
     {{- $.Values.ingress.annotations | toYaml | nindent 4 }}
     {{- end }}
-  name: ingress
+  name: "{{ .Release.Name }}-ingress"
   namespace: {{ $.Values.namespace }}
 spec:
   {{- if and .Values.ingress.class (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
