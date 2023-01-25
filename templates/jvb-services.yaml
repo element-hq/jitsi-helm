@@ -30,11 +30,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  {{ if $.Values.jvb.monitoringEnable }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9888"
+    prometheus.io/path: "/metrics"
+  {{ end }}
   labels:
     scope: jitsi
     service: jvb
     shard: {{ $shard | quote }}
     replica: {{ $replica | quote }}
+    {{- if $.Values.jvb.monitoring.service.extraLabels }}
+    {{- $.Values.jvb.monitoring.service.extraLabels | toYaml | nindent 4 }}
+    {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}-{{ $replica }}-metrics
   namespace: {{ $.Values.namespace }}
 spec:

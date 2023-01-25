@@ -47,6 +47,8 @@ jvb:
   imagePullPolicy: Always
   monitoringEnable: true
   monitoring:
+    service:
+      extraLabels: []
     image: systemli/prometheus-jitsi-meet-exporter:1.2.0
     imagePullPolicy: Always
   sysctlDaemonSetEnable: true
