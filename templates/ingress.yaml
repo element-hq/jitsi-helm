@@ -1,8 +1,17 @@
 {{ if .Values.ingress.enabled -}}
 {{ $hosts := (gt (len $.Values.ingress.hosts) 0) | ternary ($.Values.ingress.hosts) (list ($.Values.PUBLIC_URL | default "" | replace "https://" "")) -}}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
 kind: Ingress
 metadata:
+  labels:
+    {{- include "jitsi.labels" . | nindent 4 }}
+    scope: jitsi
   annotations:
     {{- if $.Values.ingress.tls.certManagerClusterIssuer }}
     cert-manager.io/cluster-issuer: {{ $.Values.ingress.tls.certManagerClusterIssuer }}
@@ -10,14 +19,13 @@ metadata:
     {{- if $.Values.ingress.annotations }}
     {{- $.Values.ingress.annotations | toYaml | nindent 4 }}
     {{- end }}
-  name: ingress
+  name: "{{ .Release.Name }}-ingress"
   namespace: {{ $.Values.namespace }}
-  labels:
-    scope: jitsi
 spec:
-  {{ if $.Values.ingress.class -}}
-  ingressClassName: {{ $.Values.ingress.class }}
-  {{ end -}}
+  {{- if and .Values.ingress.class (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .Values.ingress.class }}
+  {{- end }}
+  
   rules:
   {{ range $hosts -}}
   - host: {{ . | quote }}
@@ -34,7 +42,9 @@ spec:
               number: {{ .portNumber | required "Either portName or portNumber is required for every ingress.extraPaths" -}}
             {{ end }}
         path: {{ .path | required "path is required for every ingress.extraPaths" | quote }}
-        pathType: {{ .pathType | default "Prefix" | quote }}
+        {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType | default "Prefix" | quote }}
+        {{- end }}
       {{ end -}}
       - backend:
           service:
@@ -42,7 +52,9 @@ spec:
             port:
               name: http
         path: /
-        pathType: Prefix
+        {{- if semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion }}
+            pathType: Prefix
+        {{- end }}
   {{ end -}}
   {{ if $.Values.ingress.tls.enabled -}}
   tls:
