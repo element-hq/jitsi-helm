@@ -9,7 +9,8 @@ on:
 
 jobs:
   lint-test:
-    runs-on: ubuntu-latest
+    runs-on: non-dind
+    container: ubuntu
     steps:
       - name: Checkout
         uses: actions/checkout@v3
