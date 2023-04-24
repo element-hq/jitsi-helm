@@ -48,7 +48,10 @@ jvb:
   monitoringEnable: true
   monitoring:
     service:
-      extraAnnotations: {}
+      extraAnnotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9888"
+        prometheus.io/path: "/metrics"
       extraLabels: {}
     image: systemli/prometheus-jitsi-meet-exporter:1.2.0
     imagePullPolicy: Always
