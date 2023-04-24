@@ -11,7 +11,7 @@ metadata:
     {{- $.Values.ingress.annotations | toYaml | nindent 4 }}
     {{- end }}
   name: ingress
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
   labels:
     scope: jitsi
 spec:

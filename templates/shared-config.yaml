@@ -8,4 +8,4 @@ metadata:
   labels:
     scope: jitsi
   name: jitsi-config
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}

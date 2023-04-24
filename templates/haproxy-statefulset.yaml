@@ -5,7 +5,7 @@ metadata:
   labels:
     k8s-app: {{ $.Values.haproxy.name }}
   name: {{ $.Values.haproxy.name }}
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   replicas: 2
   selector:

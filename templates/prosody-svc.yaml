@@ -8,7 +8,7 @@ metadata:
     service: {{ $.Values.prosody.name }}
     shard: {{ $shard | quote}}
   name: shard-{{ $shard }}-{{ $.Values.prosody.name }}
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   ports:
   - name: c2s

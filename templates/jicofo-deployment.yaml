@@ -8,7 +8,7 @@ metadata:
     scope: jitsi
     shard: {{ $shard | quote}}
   name: shard-{{ $shard }}-{{ $.Values.jicofo.name }}
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -37,7 +37,7 @@ spec:
       containers:
       - env:
         - name: XMPP_SERVER
-          value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Values.namespace }}.svc.cluster.local
+          value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Release.Namespace }}.svc.cluster.local
         - name: XMPP_DOMAIN
           value: meet.jitsi
         - name: XMPP_AUTH_DOMAIN
