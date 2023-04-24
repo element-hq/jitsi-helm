@@ -11,7 +11,7 @@ metadata:
     shard: {{ $shard | quote }}
     replica: {{ $replica | quote }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}-{{ $replica }}-ice
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   type: NodePort
   externalTrafficPolicy: Local
@@ -43,7 +43,7 @@ metadata:
     {{- $.Values.jvb.monitoring.service.extraLabels | toYaml | nindent 4 }}
     {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}-{{ $replica }}-metrics
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   type: ClusterIP
   ports:

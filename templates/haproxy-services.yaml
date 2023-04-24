@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ $.Values.haproxy.name }}
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   ports:
   - name: http
@@ -20,7 +20,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ $.Values.haproxy.name }}-0
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   ports:
   - name: peering
@@ -34,7 +34,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ $.Values.haproxy.name }}-1
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   ports:
   - name: peering

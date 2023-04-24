@@ -6,5 +6,5 @@ data:
 kind: ConfigMap
 metadata:
   name: haproxy-config
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 {{ end -}}

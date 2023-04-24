@@ -8,7 +8,7 @@ metadata:
     scope: jitsi
     shard: {{ $shard | quote}}
   name: shard-{{ $shard }}-{{ $.Values.web.name }}
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   replicas: {{ $.Values.web.replicas }}
   selector:
@@ -42,7 +42,7 @@ spec:
         - name: HTTP_PORT
           value: "80"
         - name: XMPP_SERVER
-          value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Values.namespace }}.svc.cluster.local
+          value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Release.Namespace }}.svc.cluster.local
         - name: JICOFO_AUTH_USER
           value: focus
         - name: XMPP_DOMAIN
@@ -52,7 +52,7 @@ spec:
         - name: XMPP_INTERNAL_MUC_DOMAIN
           value: internal-muc.meet.jitsi
         - name: XMPP_BOSH_URL_BASE
-          value: http://shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Values.namespace }}.svc.cluster.local:5280
+          value: http://shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Release.Namespace }}.svc.cluster.local:5280
         - name: XMPP_MUC_DOMAIN
           value: muc.meet.jitsi
         - name: TZ

@@ -9,8 +9,14 @@ on:
 
 jobs:
   lint-test:
-    runs-on: ubuntu-latest
+    runs-on: non-dind
+    container: ubuntu
     steps:
+      - name: Configure deps
+        run: |
+          apt update
+          apt install -y unzip curl git
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -29,16 +35,7 @@ jobs:
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.4.0
 
-      - name: Run chart-testing (list-changed)
-        id: list-changed
-        run: |
-          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
-          if [[ -n "$changed" ]]; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Run chart-testing (lint)
-        if: steps.list-changed.outputs.changed == 'true'
-        run: ct lint --target-branch ${{ github.event.repository.default_branch }}
-        env:
-          CT_CHART_DIRS: .
+        run: |
+          git config --global --add safe.directory  "$GITHUB_WORKSPACE"
+          ct lint --target-branch ${{ github.event.repository.default_branch }} --validate-maintainers=false --charts .

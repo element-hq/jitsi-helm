@@ -14,12 +14,18 @@ jobs:
     # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     permissions:
       contents: write
-    runs-on: ubuntu-latest
+    runs-on: non-dind
+    container: ubuntu
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Configure deps
+        run: |
+          apt update
+          apt install -y unzip curl git
 
       - name: Configure Git
         run: |

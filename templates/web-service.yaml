@@ -8,7 +8,7 @@ metadata:
     service: {{ $.Values.web.name }}
     shard: {{ $shard | quote}}
   name: shard-{{ $shard }}-{{ $.Values.web.name }}
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   ports:
   - name: http

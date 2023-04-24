@@ -8,7 +8,7 @@ metadata:
     scope: jitsi
     shard: {{ $shard | quote }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   podManagementPolicy: Parallel
   replicas: {{ $.Values.jvb.replicas }}
@@ -74,7 +74,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: XMPP_SERVER
-          value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Values.namespace }}.svc.cluster.local
+          value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Release.Namespace }}.svc.cluster.local
       {{- if $.Values.jvb.provideNodeAddressAsPublicIP }}
         - name: DOCKER_HOST_ADDRESS
           valueFrom:

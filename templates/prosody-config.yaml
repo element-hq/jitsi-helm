@@ -11,4 +11,4 @@ metadata:
   labels:
     scope: jitsi
   name: prosody
-  namespace: {{ $.Values.namespace }}
+  namespace: {{ $.Release.Namespace }}
