@@ -30,12 +30,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  {{ if $.Values.jvb.monitoringEnable }}
+{{ if $.Values.jvb.monitoring.service.extraAnnotations }}
   annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "9888"
-    prometheus.io/path: "/metrics"
-  {{ end }}
+{{ $.Values.jvb.monitoring.service.extraAnnotations | toYaml | nindent 4 }}
+{{ end }}
   labels:
     scope: jitsi
     service: jvb
