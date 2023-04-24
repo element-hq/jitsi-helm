@@ -48,6 +48,7 @@ jvb:
   monitoringEnable: true
   monitoring:
     service:
+      extraAnnotations: {}
       extraLabels: {}
     image: systemli/prometheus-jitsi-meet-exporter:1.2.0
     imagePullPolicy: Always
