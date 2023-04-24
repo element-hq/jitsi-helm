@@ -34,9 +34,15 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
 
+      - name: Helm package
+        run: |
+          mkdir .cr-release-packages
+          helm package .
+          mv ./jitsi-*.tgz ./.cr-release-packages/
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           charts_dir: .
+          skip_packaging: true
