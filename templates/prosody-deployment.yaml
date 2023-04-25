@@ -59,7 +59,11 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
         {{- end }}
+        {{- if $.Values.prosody.image }}
           image: {{ $.Values.prosody.image }}
+        {{- else }}
+          image: jitsi/prosody:{{ $.Chart.AppVersion }}
+        {{- end }}
           imagePullPolicy: {{ $.Values.prosody.imagePullPolicy }}
           {{ if $.Values.prosody.monitoringEnable -}}
           ports:

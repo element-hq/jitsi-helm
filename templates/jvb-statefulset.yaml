@@ -124,7 +124,11 @@ spec:
       {{- if $.Values.jvb.extraEnvs }}
         {{- toYaml $.Values.jvb.extraEnvs | nindent 8 }}
       {{- end }}
+      {{- if $.Values.jvb.image }}
         image: {{ $.Values.jvb.image }}
+      {{- else }}
+        image: jitsi/jvb:{{ $.Chart.AppVersion }}
+      {{- end }}
         imagePullPolicy: {{ $.Values.jvb.imagePullPolicy }}
         lifecycle:
           preStop:

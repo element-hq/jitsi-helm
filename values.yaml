@@ -24,7 +24,6 @@ haproxy:
   extraPodSpec: {}
 jicofo:
   name: jicofo
-  image: jitsi/jicofo:stable-7648-3
   imagePullPolicy: Always
   resources:
     requests:
@@ -42,7 +41,6 @@ jvb:
   nodeportPrefix: "30"
   # For https://github.com/jitsi/docker-jitsi-meet/pull/1379
   # This can go back to upstream in the next Jitsi release as it has been merged
-  image: ghcr.io/matrix-org/docker-jitsi-meet/jvb:stable-7648-3-ems.1
   imagePullPolicy: Always
   monitoringEnable: true
   monitoring:
@@ -67,7 +65,6 @@ jvb:
   extraPodSpec: {}
 prosody:
   name: prosody
-  image: jitsi/prosody:stable-7648-3
   imagePullPolicy: Always
   monitoringEnable: true
   resources:
@@ -83,7 +80,6 @@ prosody:
 web:
   name: web
   replicas: 2
-  image: jitsi/web:stable-7648-3
   imagePullPolicy: Always
   ## kubectl create configmap -n <namespace> custom-config --from-file=custom-config.js
   customConfig: false
