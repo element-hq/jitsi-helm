@@ -68,7 +68,11 @@ spec:
       {{- if $.Values.jicofo.extraEnvs }}
         {{- toYaml $.Values.jicofo.extraEnvs | nindent 8 }}
       {{- end }}
+      {{- if $.Values.jicofo.image }}
         image: {{ $.Values.jicofo.image }}
+      {{- else }}
+        image: jitsi/jicofo:{{ $.Chart.AppVersion }}
+      {{- end }}
         imagePullPolicy: {{ $.Values.jicofo.imagePullPolicy }}
         name: jicofo
         ports:
