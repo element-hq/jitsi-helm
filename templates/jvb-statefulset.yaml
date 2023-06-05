@@ -80,6 +80,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
+        - name: JVB_ADVERTISE_IPS
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
       {{- end }}
         - name: XMPP_DOMAIN
           value: meet.jitsi
