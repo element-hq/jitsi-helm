@@ -58,6 +58,7 @@ jvb:
   # so this won't provide a usable IP for users to connect to.
   # Will rely on STUN providing the correct public IP if set to false.
   provideNodeAddressAsPublicIP: false
+  advertisePrivateCandidates: false
   resources:
     requests:
       cpu: 3000m
