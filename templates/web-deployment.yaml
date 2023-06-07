@@ -126,7 +126,7 @@ spec:
           items:
           - key: custom-config.js
             path: custom-config.js
-          name: custom-config
+          name: {{ $.Values.web.customConfig.name }}
         name: custom-config
       {{ end }}
       {{- if $.Values.web.customUi }}
@@ -134,7 +134,7 @@ spec:
           items:
           - key: custom-interface_config.js
             path: custom-interface_config.js
-          name: custom-ui
+          name: {{ $.Values.web.customUi.name }}
         name: custom-ui
       {{ end }}
       {{- if $.Values.web.pluginHead }}
@@ -143,7 +143,7 @@ spec:
           - key: plugin.head.html
             path: plugin.head.html
           name: plugin-head
-        name: plugin-head
+        name: {{ $.Values.web.pluginHead.name }}
       {{ end }}
       {{- if $.Values.web.welcomePageFooter }}
       - configMap:
@@ -151,7 +151,7 @@ spec:
           - key: welcomePageAdditionalContent.html
             path: welcomePageAdditionalContent.html
           name: welcome-page-footer
-        name: welcome-page-footer
+        name: {{ $.Values.web.welcomePageFooter.name }}
       {{ end }}
       {{- if $.Values.web.customWatermark }}
       - configMap:
@@ -159,7 +159,7 @@ spec:
           - key: watermark.png
             path: watermark.png
           name: watermark
-        name: watermark
+        name: {{ $.Values.web.customWatermark.name }}
       {{ end }}
     {{- if $.Values.web.extraVolumes }}
       {{- toYaml $.Values.web.extraVolumes | nindent 6 }}
