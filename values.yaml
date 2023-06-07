@@ -104,6 +104,7 @@ web:
     requests:
       cpu: 400m
       memory: 300Mi
+  httpPort: 80
   extraEnvs: []
   extraPodSpec: {}
   extraVolumes: []
