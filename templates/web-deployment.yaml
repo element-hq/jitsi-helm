@@ -126,7 +126,7 @@ spec:
           items:
           - key: custom-config.js
             path: custom-config.js
-          name: custom-config
+          name: {{ $.Values.web.customConfig.name }}
         name: custom-config
       {{ end }}
       {{- if $.Values.web.customUi }}
@@ -134,7 +134,7 @@ spec:
           items:
           - key: custom-interface_config.js
             path: custom-interface_config.js
-          name: custom-ui
+          name: {{ $.Values.web.customUi.name }}
         name: custom-ui
       {{ end }}
       {{- if $.Values.web.pluginHead }}
@@ -142,7 +142,7 @@ spec:
           items:
           - key: plugin.head.html
             path: plugin.head.html
-          name: plugin-head
+          name: {{ $.Values.web.pluginHead.name }}
         name: plugin-head
       {{ end }}
       {{- if $.Values.web.welcomePageFooter }}
@@ -150,7 +150,7 @@ spec:
           items:
           - key: welcomePageAdditionalContent.html
             path: welcomePageAdditionalContent.html
-          name: welcome-page-footer
+          name: {{ $.Values.web.welcomePageFooter.name }}
         name: welcome-page-footer
       {{ end }}
       {{- if $.Values.web.customWatermark }}
@@ -158,7 +158,7 @@ spec:
           items:
           - key: watermark.png
             path: watermark.png
-          name: watermark
+          name: {{ $.Values.web.customWatermark.name }}
         name: watermark
       {{ end }}
     {{- if $.Values.web.extraVolumes }}

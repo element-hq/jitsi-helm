@@ -82,15 +82,23 @@ web:
   replicas: 2
   imagePullPolicy: Always
   ## kubectl create configmap -n <namespace> custom-config --from-file=custom-config.js
-  customConfig: false
+  customConfig:
+    name: custom-config
   ## kubectl create configmap -n <namespace> custom-ui --from-file=custom-interface_config.js
-  customUi: false
-  ## kubectl create configmap -n <namespace> plugin-head --from-file=plugin.head.html
+  customUi:
+    name: custom-ui
   pluginHead: false
-  ## kubectl create configmap -n <namespace> welcome-page-footer --from-file=welcomePageAdditionalContent.html
+  ## kubectl create configmap -n <namespace> plugin-head --from-file=plugin.head.html
+  # pluginHead:
+  #   name: plugin-head
   welcomePageFooter: false
-  ## kubectl create configmap -n <namespace> watermark --from-file=watermark.png
+  ## kubectl create configmap -n <namespace> welcome-page-footer --from-file=welcomePageAdditionalContent.html
+  # welcomePageFooter
+  #   name: welcome-page-footer
   customWatermark: false
+  ## kubectl create configmap -n <namespace> watermark --from-file=watermark.png
+  # customWatermark:
+  #   name: watermark
   resources:
     requests:
       cpu: 400m
