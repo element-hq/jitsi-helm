@@ -62,6 +62,8 @@ jvb:
     requests:
       cpu: 3000m
       memory: 3000Mi
+  # change to /k8s if using matrix.org/docker-jitsi-meet openshift images
+  entryPointMountPath: "/entrypoint"
   extraEnvs: []
   extraPodSpec: {}
 prosody:
