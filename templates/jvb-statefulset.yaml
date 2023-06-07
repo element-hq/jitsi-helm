@@ -167,7 +167,7 @@ spec:
           {{- toYaml . | nindent 10 }}
       {{- end }}
         volumeMounts:
-        - mountPath: /entrypoint
+        - mountPath: {{ $.Values.jvb.entryPointMountPath }}
           name: jvb-entrypoint
         - mountPath: /shutdown
           name: jvb-shutdown
