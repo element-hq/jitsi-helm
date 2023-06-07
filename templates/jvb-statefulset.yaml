@@ -65,9 +65,9 @@ spec:
       {{- if empty $.Values.jvb.hostPort }}
         - "{{ $.Values.jvb.nodeportPrefix }}{{ add $shard 3 }}00"
       {{- end }}
-        - /init
+        - {{ $.Values.jvb.entryPointWorkDir }}
         command:
-        - /entrypoint/entrypoint.sh
+        - {{ $.Values.jvb.entryPointMountPath }}/entrypoint.sh
         env:
         - name: NODE_NAME
           valueFrom:
