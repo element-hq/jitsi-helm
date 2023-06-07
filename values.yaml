@@ -65,6 +65,8 @@ jvb:
       memory: 3000Mi
   # change to /k8s if using matrix.org/docker-jitsi-meet openshift images
   entryPointMountPath: "/entrypoint"
+  # change to /entrypoint if using  matrix.org/docker-jitsi-meet openshift images
+  entryPointWorkDir: "/init"
   extraEnvs: []
   extraPodSpec: {}
 prosody:
