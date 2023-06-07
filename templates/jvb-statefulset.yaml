@@ -102,7 +102,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: JVB_AUTH_PASSWORD
-              name: jitsi-secrets
+              name: {{ $.Values.secretName }}
         - name: JVB_BREWERY_MUC
           value: jvbbrewery
         - name: TZ
