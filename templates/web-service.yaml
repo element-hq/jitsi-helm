@@ -12,7 +12,7 @@ metadata:
 spec:
   ports:
   - name: http
-    port: 80
+    port: {{ $.Values.web.httpPort }}
     targetPort: http
   selector:
     k8s-app: {{ $.Values.web.name }}

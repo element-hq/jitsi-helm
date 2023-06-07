@@ -40,7 +40,7 @@ spec:
         - name: DISABLE_HTTPS
           value: "1"
         - name: HTTP_PORT
-          value: "80"
+          value: "{{ $.Values.web.httpPort }}"
         - name: XMPP_SERVER
           value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Release.Namespace }}.svc.cluster.local
         - name: JICOFO_AUTH_USER
@@ -76,7 +76,7 @@ spec:
         imagePullPolicy: {{ $.Values.web.imagePullPolicy }}
         name: web
         ports:
-        - containerPort: 80
+        - containerPort: {{ $.Values.web.httpPort }}
           protocol: TCP
           name: http
         readinessProbe:
