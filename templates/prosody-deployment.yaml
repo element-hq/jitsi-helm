@@ -122,21 +122,21 @@ spec:
             - name: JICOFO_COMPONENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: jitsi-secrets
+                  name: {{ $.Values.secretName }}
                   key: JICOFO_COMPONENT_SECRET
             - name: JVB_AUTH_USER
               value: jvb
             - name: JVB_AUTH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: jitsi-secrets
+                  name: {{ $.Values.secretName }}
                   key: JVB_AUTH_PASSWORD
             - name: JICOFO_AUTH_USER
               value: focus
             - name: JICOFO_AUTH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: jitsi-secrets
+                  name: {{ $.Values.secretName }}
                   key: JICOFO_AUTH_PASSWORD
             - name: TZ
               valueFrom:

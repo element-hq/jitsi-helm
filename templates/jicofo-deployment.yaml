@@ -48,14 +48,14 @@ spec:
           valueFrom:
             secretKeyRef:
               key: JICOFO_COMPONENT_SECRET
-              name: jitsi-secrets
+              name: {{ $.Values.secretName }}
         - name: JICOFO_AUTH_USER
           value: focus
         - name: JICOFO_AUTH_PASSWORD
           valueFrom:
             secretKeyRef:
               key: JICOFO_AUTH_PASSWORD
-              name: jitsi-secrets
+              name: {{ $.Values.secretName }}
         - name: TZ
           valueFrom:
             configMapKeyRef:

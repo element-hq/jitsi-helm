@@ -6,6 +6,7 @@ global:
   # serviceAccount: "default"
 
 shardCount: 1
+secretName: jitsi-secrets
 
 ingress:
   enabled: true
