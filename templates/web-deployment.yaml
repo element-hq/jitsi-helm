@@ -142,24 +142,24 @@ spec:
           items:
           - key: plugin.head.html
             path: plugin.head.html
-          name: plugin-head
-        name: {{ $.Values.web.pluginHead.name }}
+          name: {{ $.Values.web.pluginHead.name }}
+        name: plugin-head
       {{ end }}
       {{- if $.Values.web.welcomePageFooter }}
       - configMap:
           items:
           - key: welcomePageAdditionalContent.html
             path: welcomePageAdditionalContent.html
-          name: welcome-page-footer
-        name: {{ $.Values.web.welcomePageFooter.name }}
+          name: {{ $.Values.web.welcomePageFooter.name }}
+        name: welcome-page-footer
       {{ end }}
       {{- if $.Values.web.customWatermark }}
       - configMap:
           items:
           - key: watermark.png
             path: watermark.png
-          name: watermark
-        name: {{ $.Values.web.customWatermark.name }}
+          name: {{ $.Values.web.customWatermark.name }}
+        name: watermark
       {{ end }}
     {{- if $.Values.web.extraVolumes }}
       {{- toYaml $.Values.web.extraVolumes | nindent 6 }}
