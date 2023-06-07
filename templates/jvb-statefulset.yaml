@@ -7,6 +7,9 @@ metadata:
     k8s-app: {{ $.Values.jvb.name }}
     scope: jitsi
     shard: {{ $shard | quote }}
+    {{- with $.Values.jvb.extraLabels }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -24,6 +27,9 @@ spec:
         k8s-app: {{ $.Values.jvb.name }}
         scope: jitsi
         shard: {{ $shard | quote }}
+        {{- with $.Values.jvb.extraLabels }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       annotations:
         kubectl.kubernetes.io/default-container: jvb
       {{ if $.Values.jvb.monitoringEnable }}

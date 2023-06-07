@@ -8,6 +8,9 @@ metadata:
   labels:
     k8s-app: sysctl-jvb
     scope: jitsi
+    {{- with $.Values.sysctljvb.extraLabels }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   name: sysctl-jvb
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -21,7 +24,7 @@ spec:
         k8s-app: sysctl-jvb
         scope: jitsi
     spec:
-    {{- with $.Values.jvb.extraPodSpec }}
+    {{- with $.Values.sysctljvb.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
     {{- if (($.Values.global).serviceAccount) }}

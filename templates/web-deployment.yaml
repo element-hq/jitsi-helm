@@ -7,6 +7,9 @@ metadata:
     k8s-app: {{ $.Values.web.name }}
     scope: jitsi
     shard: {{ $shard | quote}}
+    {{- with $.Values.web.extraLabels }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.web.name }}
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -27,6 +30,9 @@ spec:
         k8s-app: {{ $.Values.web.name }}
         scope: jitsi
         shard: {{ $shard | quote}}
+        {{- with $.Values.web.extraLabels }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
     spec:
     {{- with $.Values.web.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
