@@ -4,6 +4,9 @@ kind: StatefulSet
 metadata:
   labels:
     k8s-app: {{ $.Values.haproxy.name }}
+    {{- with $.Values.haproxy.extraLabels }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   name: {{ $.Values.haproxy.name }}
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -16,6 +19,9 @@ spec:
     metadata:
       labels:
         k8s-app: {{ $.Values.haproxy.name }}
+        {{- with $.Values.haproxy.extraLabels }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       annotations:
         checksum/config: {{ tpl (.Files.Get "configs/haproxy/haproxy.cfg") . | sha256sum }}
     spec:
