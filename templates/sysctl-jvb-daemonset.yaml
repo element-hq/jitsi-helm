@@ -19,9 +19,6 @@ metadata:
   name: sysctl-jvb
   namespace: {{ $.Release.Namespace }}
 spec:
-{{- if not (($.Values.global).serviceAccount) }}
-  automountServiceAccountToken: false
-{{- end }}
   selector:
     matchLabels:
       k8s-app: sysctl-jvb
@@ -41,6 +38,11 @@ spec:
     spec:
     {{- with $.Values.sysctljvb.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- if (($.Values.global).serviceAccount) }}
+      serviceAccountName: {{ (($.Values.global).serviceAccount) }}
+    {{- else }}
+      automountServiceAccountToken: false
     {{- end }}
       hostNetwork: yes
       containers:

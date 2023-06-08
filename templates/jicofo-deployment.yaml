@@ -49,6 +49,8 @@ spec:
     {{- end }}
     {{- if (($.Values.global).serviceAccount) }}
       serviceAccountName: {{ (($.Values.global).serviceAccount) }}
+    {{- else }}
+      automountServiceAccountToken: false
     {{- end }}
       containers:
       - env:
@@ -112,4 +114,12 @@ spec:
       {{- with $.Values.jicofo.extraContainerSpec }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with $.Values.jicofo.extraVolumeMounts }}
+        volumeMounts:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with $.Values.jicofo.extraVolumes }}
+      volumes:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
 {{ end }}

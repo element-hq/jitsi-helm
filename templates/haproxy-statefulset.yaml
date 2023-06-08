@@ -38,6 +38,8 @@ spec:
     {{- end }}
     {{- if (($.Values.global).serviceAccount) }}
       serviceAccountName: {{ (($.Values.global).serviceAccount) }}
+    {{- else }}
+      automountServiceAccountToken: false
     {{- end }}
       affinity:
         podAntiAffinity:
@@ -76,6 +78,9 @@ spec:
         - mountPath: /usr/local/etc/haproxy/haproxy.cfg
           name: haproxy-config
           subPath: haproxy.cfg
+      {{- with $.Values.haproxy.extraVolumeMounts }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with $.Values.haproxy.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
@@ -90,4 +95,7 @@ spec:
             path: haproxy.cfg
           name: haproxy-config
         name: haproxy-config
+    {{- with $.Values.haproxy.extraVolumes }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
 {{ end -}}

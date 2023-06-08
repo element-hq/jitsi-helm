@@ -36,6 +36,8 @@ jicofo:
   extraLabels: {}
   extraAnnotations: {}
   extraContainerSpec: {}
+  extraVolumes: []
+  extraVolumeMounts: []
 jvb:
   name: jvb
   replicas: 2
@@ -139,7 +141,6 @@ sysctljvb:
   extraAnnotations: {}
 
 createSecret: true
-sharedConfigMapName: jitsi-config
 JICOFO_AUTH_PASSWORD: ""
 JICOFO_COMPONENT_SECRET: ""
 JVB_AUTH_PASSWORD: ""

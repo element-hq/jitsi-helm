@@ -50,6 +50,8 @@ spec:
 
     {{- if (($.Values.global).serviceAccount) }}
       serviceAccountName: {{ (($.Values.global).serviceAccount) }}
+    {{- else }}
+      automountServiceAccountToken: false
     {{- end }}
       containers:
       - env:
