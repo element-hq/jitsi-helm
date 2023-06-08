@@ -1,3 +1,11 @@
+{{- $memoryLimit := .Values.resources.limits.memory -}}
+{{- $value := regexFind "\\d+" $memoryLimit -}}
+{{- $heapSize := "" -}}
+{{- if hasSuffix "Mi" $memoryLimit -}}
+  {{- $heapSize = mul 0.7 (int $value) | int -}}
+{{- else if hasSuffix "Gi" $memoryLimit -}}
+  {{- $heapSize = mul 0.95 (mul 1024 (int $value)) | int -}}
+{{- end -}}
 {{- range $shard, $e := until (int $.Values.shardCount) }}
 ---
 apiVersion: apps/v1
@@ -143,7 +151,7 @@ spec:
           value: "{{ $.Values.jvb.advertisePrivateCandidates }}"
       {{- if ne (merge $.Values dict | dig "jvb" "resources" "limits" "memory" "") "" }}
         - name: VIDEOBRIDGE_MAX_MEMORY
-          value: {{ mulf (regexFind "[0-9]+" $.Values.jvb.resources.limits.memory) 0.95 }}{{ regexFind "[A-Z]" $.Values.jvb.resources.limits.memory | lower }}
+          value: {{ $heapSize }}M
       {{- end }}
       {{- if $.Values.jvb.extraEnvs }}
         {{- toYaml $.Values.jvb.extraEnvs | nindent 8 }}
