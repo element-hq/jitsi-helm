@@ -10,6 +10,7 @@ secretName: jitsi-secrets
 
 ingress:
   enabled: true
+  name: ingress
   hosts: []
   # class:
   tls:

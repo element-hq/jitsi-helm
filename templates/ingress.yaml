@@ -10,7 +10,7 @@ metadata:
     {{- if $.Values.ingress.annotations }}
     {{- $.Values.ingress.annotations | toYaml | nindent 4 }}
     {{- end }}
-  name: ingress
+  name:  {{ $.Values.ingress.name }}
   namespace: {{ $.Release.Namespace }}
   labels:
     scope: jitsi
