@@ -126,6 +126,9 @@ spec:
       {{- if $.Values.web.extraVolumeMounts }}
         {{- toYaml $.Values.web.extraVolumeMounts | nindent 8 }}
       {{- end }}
+      {{- with $.Values.web.extraContainerSpec }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
       {{- if $.Values.web.customConfig }}
       - configMap:

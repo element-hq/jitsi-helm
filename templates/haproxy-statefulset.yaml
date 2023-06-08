@@ -28,7 +28,6 @@ spec:
     {{- with $.Values.haproxy.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    
     {{- if (($.Values.global).serviceAccount) }}
       serviceAccountName: {{ (($.Values.global).serviceAccount) }}
     {{- end }}
@@ -72,6 +71,9 @@ spec:
       {{- with $.Values.haproxy.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
+      {{- end }}
+      {{- with $.Values.haproxy.extraContainerSpec }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
       - configMap:

@@ -32,6 +32,7 @@ jicofo:
       memory: 400Mi
   extraEnvs: []
   extraPodSpec: {}
+  extraContainerSpec: {}
 jvb:
   name: jvb
   replicas: 2
@@ -53,6 +54,7 @@ jvb:
       extraLabels: {}
     image: systemli/prometheus-jitsi-meet-exporter:1.2.0
     imagePullPolicy: Always
+    extraContainerSpec: {}
   sysctlDaemonSetEnable: true
   # In most k8s environments this will be a private IP and in most deployments, users will connect to a public ip
   # so this won't provide a usable IP for users to connect to.
@@ -68,6 +70,7 @@ jvb:
   # change to /entrypoint if using  matrix.org/docker-jitsi-meet openshift images
   entryPointWorkDir: "/init"
   extraEnvs: []
+  extraContainerSpec: {}
   extraPodSpec: {}
 prosody:
   name: prosody
@@ -81,6 +84,7 @@ prosody:
   extraPodSpec: {}
   extraVolumes: []
   extraVolumeMounts: []
+  extraContainerSpec: {}
   globalModules: []
   globalConfig: []
 web:
@@ -113,10 +117,13 @@ web:
   extraEnvs: []
   extraPodSpec: {}
   extraVolumes: []
+  extraContainerSpec: {}
   extraVolumeMounts: []
 sysctljvb:
   image: alpine:3.15
   imagePullPolicy: Always
+  extraPodSpec: {}
+  extraContainerSpec: {}
 
 createSecret: true
 JICOFO_AUTH_PASSWORD: ""

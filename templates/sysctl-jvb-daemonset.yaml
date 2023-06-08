@@ -47,4 +47,7 @@ spec:
           do
             sleep 60s
           done
+      {{- with $.Values.sysctljvb.extraContainerSpec }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{ end -}}
