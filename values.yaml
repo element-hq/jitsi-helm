@@ -32,6 +32,8 @@ jicofo:
       memory: 400Mi
   extraEnvs: []
   extraPodSpec: {}
+  extraLabels: {}
+  extraAnnotations: {}
   extraContainerSpec: {}
 jvb:
   name: jvb
@@ -72,6 +74,8 @@ jvb:
   extraEnvs: []
   extraContainerSpec: {}
   extraPodSpec: {}
+  extraLabels: {}
+  extraAnnotations: {}
 prosody:
   name: prosody
   imagePullPolicy: Always
@@ -87,6 +91,8 @@ prosody:
   extraContainerSpec: {}
   globalModules: []
   globalConfig: []
+  extraLabels: {}
+  extraAnnotations: {}
 web:
   name: web
   replicas: 2
@@ -119,11 +125,15 @@ web:
   extraVolumes: []
   extraContainerSpec: {}
   extraVolumeMounts: []
+  extraLabels: {}
+  extraAnnotations: {}
 sysctljvb:
   image: alpine:3.15
   imagePullPolicy: Always
   extraPodSpec: {}
   extraContainerSpec: {}
+  extraLabels: {}
+  extraAnnotations: {}
 
 createSecret: true
 JICOFO_AUTH_PASSWORD: ""

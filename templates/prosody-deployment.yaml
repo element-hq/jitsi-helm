@@ -7,9 +7,13 @@ metadata:
     k8s-app: {{ $.Values.prosody.name }}
     scope: jitsi
     shard: {{ $shard | quote}}
-    {{- with $.Values.prosody.extraLabels }}
-      {{- toYaml . | nindent 6 }}
-    {{- end }}
+  {{- with $.Values.prosody.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $.Values.prosody.extraAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.prosody.name }}
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -30,14 +34,19 @@ spec:
         k8s-app: {{ $.Values.prosody.name }}
         scope: jitsi
         shard: {{ $shard | quote}}
-        {{- with $.Values.prosody.extraLabels }}
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
-      {{ if $.Values.prosody.monitoringEnable }}
+      {{- with $.Values.prosody.extraLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{ if or $.Values.prosody.monitoringEnable $.Values.prosody.extraAnnotation }}
       annotations:
+      {{ if $.Values.prosody.monitoringEnable  }}
         prometheus.io/scrape: "true"
         prometheus.io/port: "5280"
       {{ end }}
+      {{- with $.Values.prosody.extraAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
     spec:
     {{- with $.Values.prosody.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
