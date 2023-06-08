@@ -4,9 +4,13 @@ kind: StatefulSet
 metadata:
   labels:
     k8s-app: {{ $.Values.haproxy.name }}
-    {{- with $.Values.haproxy.extraLabels }}
-      {{- toYaml . | nindent 6 }}
-    {{- end }}
+  {{- with $.Values.haproxy.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $.Values.haproxy.extraAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   name: {{ $.Values.haproxy.name }}
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -20,14 +24,18 @@ spec:
       labels:
         k8s-app: {{ $.Values.haproxy.name }}
         {{- with $.Values.haproxy.extraLabels }}
-          {{- toYaml . | nindent 10 }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
         checksum/config: {{ tpl (.Files.Get "configs/haproxy/haproxy.cfg") . | sha256sum }}
+      {{- with $.Values.haproxy.extraAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
     {{- with $.Values.haproxy.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
+    
     {{- if (($.Values.global).serviceAccount) }}
       serviceAccountName: {{ (($.Values.global).serviceAccount) }}
     {{- end }}

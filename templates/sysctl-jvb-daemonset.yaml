@@ -11,6 +11,10 @@ metadata:
     {{- with $.Values.sysctljvb.extraLabels }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
+  {{- with $.Values.sysctljvb.extraAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   name: sysctl-jvb
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -23,6 +27,13 @@ spec:
       labels:
         k8s-app: sysctl-jvb
         scope: jitsi
+    {{- with $.Values.sysctljvb.extraLabels }}
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with $.Values.sysctljvb.extraAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
     spec:
     {{- with $.Values.sysctljvb.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
