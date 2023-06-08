@@ -35,3 +35,20 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+
+{{/*
+Define a helper function to output the data of the shared ConfigMap
+*/}}
+{{- define "jitsi.sharedconfigmap.data" -}}
+JVB_STUN_SERVERS: {{ $.Values.JVB_STUN_SERVERS }}
+PUBLIC_URL: {{ ((gt (len $.Values.ingress.hosts) 0) | ternary (print "https://" ($.Values.ingress.hosts | first)) $.Values.PUBLIC_URL) | required "One of PUBLIC_URL or ingress.hosts must be provided" }}
+TZ: {{ $.Values.TZ }}
+{{- end }}
+
+{{/*
+Define a helper function to create a hash of the output of the previous function
+*/}}
+{{- define "jitsi.sharedconfigmap.hash" -}}
+{{- $cm := include "jitsi.sharedconfigmap.data" . | sha256sum }}
+{{- printf "%s" (trunc 63 $cm) -}}
+{{- end }}

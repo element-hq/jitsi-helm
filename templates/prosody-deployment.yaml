@@ -10,8 +10,9 @@ metadata:
   {{- with $.Values.prosody.extraLabels }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with $.Values.prosody.extraAnnotations }}
   annotations:
+    configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+  {{- with $.Values.prosody.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.prosody.name }}
@@ -37,15 +38,14 @@ spec:
       {{- with $.Values.prosody.extraLabels }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{ if or $.Values.prosody.monitoringEnable $.Values.prosody.extraAnnotation }}
       annotations:
+        configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
       {{ if $.Values.prosody.monitoringEnable  }}
         prometheus.io/scrape: "true"
         prometheus.io/port: "5280"
       {{ end }}
       {{- with $.Values.prosody.extraAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
       {{- end }}
     spec:
     {{- with $.Values.prosody.extraPodSpec }}

@@ -11,8 +11,9 @@ metadata:
   {{- with $.Values.jvb.extraLabels }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with $.Values.jvb.extraAnnotations }}
   annotations:
+    configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+  {{- with $.Values.jvb.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}
@@ -36,6 +37,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       annotations:
+        configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
         kubectl.kubernetes.io/default-container: jvb
       {{ if $.Values.jvb.monitoringEnable }}
         prometheus.io/scrape: "true"
