@@ -72,6 +72,8 @@ jvb:
   entryPointMountPath: "/entrypoint"
   # change to /entrypoint if using  matrix.org/docker-jitsi-meet openshift images
   entryPointWorkDir: "/init"
+  gracefulShutdownConfigMap:
+    name: jvb-shutdown
   extraEnvs: []
   extraContainerSpec: {}
   extraPodSpec: {}

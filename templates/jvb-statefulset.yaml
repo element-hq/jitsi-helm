@@ -189,8 +189,10 @@ spec:
         volumeMounts:
         - mountPath: {{ $.Values.jvb.entryPointMountPath }}
           name: jvb-entrypoint
+      {{- with $.Values.jvb.gracefulShutdownConfigMap }}
         - mountPath: /shutdown
           name: jvb-shutdown
+      {{- end }}
       {{- with $.Values.jvb.extraContainerSpec }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -200,10 +202,12 @@ spec:
           defaultMode: 484
           name: jvb-entrypoint
         name: jvb-entrypoint
+    {{- with $.Values.jvb.gracefulShutdownConfigMap }}
       - configMap:
           defaultMode: 484
-          name: jvb-shutdown
+          name: {{ $.Values.jvb.gracefulShutdownConfigMap.name }}
         name: jvb-shutdown
+    {{- end }}
   updateStrategy:
     type: RollingUpdate
 {{ end }}
