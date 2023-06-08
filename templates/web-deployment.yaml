@@ -10,8 +10,9 @@ metadata:
   {{- with $.Values.web.extraLabels }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with $.Values.web.extraAnnotations }}
   annotations:
+    configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+  {{- with $.Values.web.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.web.name }}
@@ -37,8 +38,9 @@ spec:
       {{- with $.Values.web.extraLabels }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with $.Values.web.extraAnnotations }}
       annotations:
+        configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+      {{- with $.Values.web.extraAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
@@ -73,11 +75,11 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: TZ
-              name: jitsi-config
+              name: {{ $.Values.sharedConfigMapName }}
         - name: PUBLIC_URL
           valueFrom:
             configMapKeyRef:
-              name: jitsi-config
+              name: {{ $.Values.sharedConfigMapName }}
               key: PUBLIC_URL
       {{- if $.Values.web.extraEnvs }}
         {{- toYaml $.Values.web.extraEnvs | nindent 8 }}

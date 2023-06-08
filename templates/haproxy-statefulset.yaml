@@ -7,8 +7,9 @@ metadata:
   {{- with $.Values.haproxy.extraLabels }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with $.Values.haproxy.extraAnnotations }}
   annotations:
+    checksum/config: {{ tpl (.Files.Get "configs/haproxy/haproxy.cfg") . | sha256sum }}
+  {{- with $.Values.haproxy.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   name: {{ $.Values.haproxy.name }}
@@ -35,7 +36,6 @@ spec:
     {{- with $.Values.haproxy.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    
     {{- if (($.Values.global).serviceAccount) }}
       serviceAccountName: {{ (($.Values.global).serviceAccount) }}
     {{- end }}

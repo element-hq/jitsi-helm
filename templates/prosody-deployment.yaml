@@ -10,8 +10,9 @@ metadata:
   {{- with $.Values.prosody.extraLabels }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with $.Values.prosody.extraAnnotations }}
   annotations:
+    configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+  {{- with $.Values.prosody.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.prosody.name }}
@@ -37,15 +38,14 @@ spec:
       {{- with $.Values.prosody.extraLabels }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{ if or $.Values.prosody.monitoringEnable $.Values.prosody.extraAnnotation }}
       annotations:
+        configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
       {{ if $.Values.prosody.monitoringEnable  }}
         prometheus.io/scrape: "true"
         prometheus.io/port: "5280"
       {{ end }}
       {{- with $.Values.prosody.extraAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
       {{- end }}
     spec:
     {{- with $.Values.prosody.extraPodSpec }}
@@ -156,7 +156,7 @@ spec:
             - name: TZ
               valueFrom:
                 configMapKeyRef:
-                  name: jitsi-config
+                  name: {{ $.Values.sharedConfigMapName }}
                   key: TZ
             {{ if $.Values.prosody.monitoringEnable }}
             # activate add-ons that enrich the available stats of prosody
@@ -178,7 +178,7 @@ spec:
             - name: PUBLIC_URL
               valueFrom:
                 configMapKeyRef:
-                  name: jitsi-config
+                  name: {{ $.Values.sharedConfigMapName }}
                   key: PUBLIC_URL
           {{- if $.Values.prosody.extraEnvs }}
             {{- toYaml $.Values.prosody.extraEnvs | nindent 12 }}

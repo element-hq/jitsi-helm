@@ -10,8 +10,9 @@ metadata:
   {{- with $.Values.jicofo.extraLabels }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with $.Values.jicofo.extraAnnotations }}
   annotations:
+    configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+  {{- with $.Values.jicofo.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.jicofo.name }}
@@ -37,8 +38,9 @@ spec:
       {{- with $.Values.jicofo.extraLabels }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with $.Values.jicofo.extraAnnotations }}
       annotations:
+        configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+      {{- with $.Values.jicofo.extraAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
@@ -74,7 +76,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: TZ
-              name: jitsi-config
+              name: {{ $.Values.sharedConfigMapName }}
         - name: JVB_BREWERY_MUC
           value: jvbbrewery
         - name: JICOFO_ENABLE_HEALTH_CHECKS

@@ -11,13 +11,17 @@ metadata:
     {{- with $.Values.sysctljvb.extraLabels }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
-  {{- with $.Values.sysctljvb.extraAnnotations }}
   annotations:
+    configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+  {{- with $.Values.sysctljvb.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   name: sysctl-jvb
   namespace: {{ $.Release.Namespace }}
 spec:
+{{- if not (($.Values.global).serviceAccount) }}
+  automountServiceAccountToken: false
+{{- end }}
   selector:
     matchLabels:
       k8s-app: sysctl-jvb
@@ -37,9 +41,6 @@ spec:
     spec:
     {{- with $.Values.sysctljvb.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
-    {{- end }}
-    {{- if (($.Values.global).serviceAccount) }}
-      serviceAccountName: {{ (($.Values.global).serviceAccount) }}
     {{- end }}
       hostNetwork: yes
       containers:

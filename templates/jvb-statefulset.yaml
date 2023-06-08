@@ -11,8 +11,9 @@ metadata:
   {{- with $.Values.jvb.extraLabels }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with $.Values.jvb.extraAnnotations }}
   annotations:
+    configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+  {{- with $.Values.jvb.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}
@@ -36,6 +37,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       annotations:
+        configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
         kubectl.kubernetes.io/default-container: jvb
       {{ if $.Values.jvb.monitoringEnable }}
         prometheus.io/scrape: "true"
@@ -112,7 +114,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: JVB_STUN_SERVERS
-              name: jitsi-config
+              name: {{ $.Values.sharedConfigMapName }}
         - name: COLIBRI_REST_ENABLED
           value: "true"
         - name: SHUTDOWN_REST_ENABLED
@@ -130,11 +132,11 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: TZ
-              name: jitsi-config
+              name: {{ $.Values.sharedConfigMapName }}
         - name: PUBLIC_URL
           valueFrom:
             configMapKeyRef:
-              name: jitsi-config
+              name: {{ $.Values.sharedConfigMapName }}
               key: PUBLIC_URL
         - name: JVB_WS_SERVER_ID
           valueFrom:
