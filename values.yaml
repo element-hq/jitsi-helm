@@ -139,6 +139,8 @@ sysctljvb:
   extraAnnotations: {}
 
 createSecret: true
+sharedConfigMapName: jitsi-config
+
 JICOFO_AUTH_PASSWORD: ""
 JICOFO_COMPONENT_SECRET: ""
 JVB_AUTH_PASSWORD: ""

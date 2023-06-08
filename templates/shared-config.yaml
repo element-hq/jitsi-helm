@@ -7,5 +7,5 @@ kind: ConfigMap
 metadata:
   labels:
     scope: jitsi
-  name: jitsi-config
+  name: {{ $.Values.sharedConfigMapName }}
   namespace: {{ $.Release.Namespace }}

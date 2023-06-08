@@ -74,7 +74,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: TZ
-              name: jitsi-config
+              name: {{ $.Values.sharedConfigMapName }}
         - name: JVB_BREWERY_MUC
           value: jvbbrewery
         - name: JICOFO_ENABLE_HEALTH_CHECKS

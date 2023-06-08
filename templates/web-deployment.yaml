@@ -73,11 +73,11 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: TZ
-              name: jitsi-config
+              name: {{ $.Values.sharedConfigMapName }}
         - name: PUBLIC_URL
           valueFrom:
             configMapKeyRef:
-              name: jitsi-config
+              name: {{ $.Values.sharedConfigMapName }}
               key: PUBLIC_URL
       {{- if $.Values.web.extraEnvs }}
         {{- toYaml $.Values.web.extraEnvs | nindent 8 }}
