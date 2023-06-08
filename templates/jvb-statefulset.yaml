@@ -47,6 +47,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      automountServiceAccountToken: false
     {{- with $.Values.jvb.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
@@ -204,6 +205,9 @@ spec:
         - mountPath: /shutdown
           name: jvb-shutdown
       {{- end }}
+      {{- with $.Values.jvb.extraVolumeMounts }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with $.Values.jvb.extraContainerSpec }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -218,6 +222,9 @@ spec:
           defaultMode: 484
           name: {{ $.Values.jvb.gracefulShutdownConfigMap.name }}
         name: jvb-shutdown
+    {{- end }}
+    {{- with $.Values.jvb.extraVolumes }}
+      {{- toYaml . | nindent 6 }}
     {{- end }}
   updateStrategy:
     type: RollingUpdate

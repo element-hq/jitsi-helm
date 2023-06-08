@@ -53,6 +53,8 @@ spec:
     {{- end }}
     {{- if (($.Values.global).serviceAccount) }}
       serviceAccountName: {{ (($.Values.global).serviceAccount) }}
+    {{- else }}
+      automountServiceAccountToken: false
     {{- end }}
       volumes:
         - name: prosody
