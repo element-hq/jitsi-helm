@@ -143,14 +143,14 @@ spec:
         - name: JVB_ADVERTISE_PRIVATE_CANDIDATES
           value: "{{ $.Values.jvb.advertisePrivateCandidates }}"
       {{- if ne (merge $.Values dict | dig "jvb" "resources" "limits" "memory" "") "" }}
-        {{- $memoryLimit := .Values.jvb.resources.limits.memory -}}
-        {{- $value := regexFind "\\d+" $memoryLimit -}}
-        {{- $heapSize := "" -}}
-        {{- if hasSuffix "Mi" $memoryLimit -}}
-          {{- $heapSize = mul 0.7 (int $value) | int -}}
-        {{- else if hasSuffix "Gi" $memoryLimit -}}
-          {{- $heapSize = mul 0.95 (mul 1024 (int $value)) | int -}}
-        {{- end -}}
+        {{- $memoryLimit := $.Values.jvb.resources.limits.memory }}
+        {{- $value := regexFind "\\d+" $memoryLimit }}
+        {{- $heapSize := "" }}
+        {{- if hasSuffix "Mi" $memoryLimit }}
+          {{- $heapSize = mulf 0.95 (int $value) | int }}
+        {{- else if hasSuffix "Gi" $memoryLimit }}
+          {{- $heapSize = mulf 0.95 (mul 1024 (int $value)) | int }}
+        {{- end }}
         - name: VIDEOBRIDGE_MAX_MEMORY
           value: {{ $heapSize }}M
       {{- end }}
