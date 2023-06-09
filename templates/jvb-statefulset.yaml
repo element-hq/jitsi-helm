@@ -175,7 +175,7 @@ spec:
             exec:
               command:
               - bash
-              - /shutdown/graceful_shutdown.sh
+              - {{ $.Values.jvb.shutdownScriptPath }}
               - -t 3
         name: jvb
         ports:
@@ -210,8 +210,9 @@ spec:
         - mountPath: {{ $.Values.jvb.entryPointMountPath }}
           name: jvb-entrypoint
       {{- with $.Values.jvb.gracefulShutdownConfigMap }}
-        - mountPath: /shutdown
+        - mountPath: {{ $.Values.jvb.shutdownScriptPath }}
           name: jvb-shutdown
+          subPath: graceful_shutdown.sh
       {{- end }}
       {{- with $.Values.jvb.extraVolumeMounts }}
         {{- toYaml . | nindent 8 }}

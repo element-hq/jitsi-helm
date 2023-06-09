@@ -76,6 +76,8 @@ jvb:
   entryPointWorkDir: "/init"
   gracefulShutdownConfigMap:
     name: jvb-shutdown
+  # change to /usr/bin/graceful_shutdown if using  matrix.org/docker-jitsi-meet openshift images
+  shutdownScriptPath: "/shutdown/graceful_shutdown.sh"
   extraEnvs: []
   extraContainerSpec: {}
   extraPodSpec: {}
