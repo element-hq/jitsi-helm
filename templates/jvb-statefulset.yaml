@@ -223,12 +223,12 @@ spec:
       terminationGracePeriodSeconds: 2147483647
       volumes:
       - configMap:
-          defaultMode: 484
+          defaultMode: 508
           name: jvb-entrypoint
         name: jvb-entrypoint
     {{- with $.Values.jvb.gracefulShutdownConfigMap }}
       - configMap:
-          defaultMode: 484
+          defaultMode: 508
           name: {{ $.Values.jvb.gracefulShutdownConfigMap.name }}
         name: jvb-shutdown
     {{- end }}
