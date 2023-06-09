@@ -62,14 +62,18 @@ spec:
           httpGet:
             port: metrics
             path: "/health"
-        name: prometheus-exporter
-        ports:
-        - containerPort: 9888
-          name: metrics
         readinessProbe:
           httpGet:
             port: metrics
             path: "/health"
+        startupProbe:
+          httpGet:
+            port: metrics
+            path: "/health"
+        name: prometheus-exporter
+        ports:
+        - containerPort: 9888
+          name: metrics
         resources:
           limits:
             cpu: 100m
@@ -191,6 +195,10 @@ spec:
             path: /about/health
             port: private-http
         startupProbe:
+          httpGet:
+            path: /about/health
+            port: private-http
+        livenessProbe:
           httpGet:
             path: /about/health
             port: private-http

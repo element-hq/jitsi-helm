@@ -107,6 +107,10 @@ spec:
           httpGet:
             path: /about/version
             port: rest
+        readinessProbe:
+          httpGet:
+            path: /about/version
+            port: rest
       {{- with $.Values.jicofo.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
