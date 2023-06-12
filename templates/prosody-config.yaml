@@ -10,5 +10,8 @@ kind: ConfigMap
 metadata:
   labels:
     scope: jitsi
-  name: prosody
+  {{- with $.Values.prosody.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  name: {{ $.Values.prosody.configMap.name }}
   namespace: {{ $.Release.Namespace }}

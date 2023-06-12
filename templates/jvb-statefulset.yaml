@@ -207,9 +207,11 @@ spec:
           {{- toYaml . | nindent 10 }}
       {{- end }}
         volumeMounts:
+      {{- if $.Values.jvb.entryPointConfigMap.enable }}
         - mountPath: {{ $.Values.jvb.entryPointMountPath }}
           name: jvb-entrypoint
-      {{- with $.Values.jvb.gracefulShutdownConfigMap }}
+      {{- end }}
+      {{- if $.Values.jvb.gracefulShutdownConfigMap.enable }}
         - mountPath: {{ $.Values.jvb.shutdownScriptPath }}
           name: jvb-shutdown
           subPath: graceful_shutdown.sh
@@ -221,12 +223,14 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       terminationGracePeriodSeconds: 2147483647
+    {{- if $.Values.jvb.entryPointConfigMap.enable }}
       volumes:
       - configMap:
           defaultMode: 508
-          name: jvb-entrypoint
+          name: {{ $.Values.jvb.entryPointConfigMap.name }}
         name: jvb-entrypoint
-    {{- with $.Values.jvb.gracefulShutdownConfigMap }}
+    {{- end }}
+    {{- if $.Values.jvb.gracefulShutdownConfigMap.enable }}
       - configMap:
           defaultMode: 508
           name: {{ $.Values.jvb.gracefulShutdownConfigMap.name }}
