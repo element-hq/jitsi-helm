@@ -35,7 +35,7 @@ kind: Service
 metadata:
 {{ with $.Values.jvb.monitoring.service.extraAnnotations }}
   annotations:
-{{ toYaml . | nindent 4 }}
+    {{ toYaml . | nindent 4 }}
 {{ end }}
   labels:
     scope: jitsi
