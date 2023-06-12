@@ -4,6 +4,10 @@ kind: Service
 metadata:
   name: {{ $.Values.haproxy.name }}
   namespace: {{ $.Release.Namespace }}
+  {{- with $.Values.haproxy.extraLabels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ports:
   - name: http

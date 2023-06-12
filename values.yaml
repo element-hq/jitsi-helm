@@ -51,6 +51,12 @@ jvb:
   imagePullPolicy: Always
   monitoringEnable: true
   monitoring:
+    resources:
+      limits:
+        memory: 100Mi
+      requests:
+        cpu: 100m
+        memory: 100Mi
     service:
       extraAnnotations:
         prometheus.io/scrape: "true"
