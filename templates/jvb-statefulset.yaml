@@ -74,13 +74,10 @@ spec:
         ports:
         - containerPort: 9888
           name: metrics
+      {{- with $.Values.jvb.monitoring.resources }}
         resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
+          {{- toYaml . | nindent 10 }}
+      {{- end }}
       {{- with $.Values.jvb.monitoring.extraContainerSpec }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

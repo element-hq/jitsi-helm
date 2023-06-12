@@ -14,6 +14,9 @@ metadata:
   namespace: {{ $.Release.Namespace }}
   labels:
     scope: jitsi
+  {{- with $.Values.ingress.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   {{ if $.Values.ingress.class -}}
   ingressClassName: {{ $.Values.ingress.class }}

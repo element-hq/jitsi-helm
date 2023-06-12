@@ -7,6 +7,9 @@ metadata:
     scope: jitsi
     service: {{ $.Values.prosody.name }}
     shard: {{ $shard | quote}}
+  {{- with $.Values.prosody.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.prosody.name }}
   namespace: {{ $.Release.Namespace }}
 spec:

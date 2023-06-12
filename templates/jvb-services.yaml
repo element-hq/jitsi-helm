@@ -10,6 +10,9 @@ metadata:
     service: jvb
     shard: {{ $shard | quote }}
     replica: {{ $replica | quote }}
+  {{- with $.Values.jvb.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}-{{ $replica }}-ice
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -30,18 +33,18 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-{{ if $.Values.jvb.monitoring.service.extraAnnotations }}
+{{ with $.Values.jvb.monitoring.service.extraAnnotations }}
   annotations:
-{{ $.Values.jvb.monitoring.service.extraAnnotations | toYaml | nindent 4 }}
+{{ toYaml . | nindent 4 }}
 {{ end }}
   labels:
     scope: jitsi
     service: jvb
     shard: {{ $shard | quote }}
     replica: {{ $replica | quote }}
-    {{- if $.Values.jvb.monitoring.service.extraLabels }}
-    {{- $.Values.jvb.monitoring.service.extraLabels | toYaml | nindent 4 }}
-    {{- end }}
+  {{- with $.Values.jvb.monitoring.service.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}-{{ $replica }}-metrics
   namespace: {{ $.Release.Namespace }}
 spec:
