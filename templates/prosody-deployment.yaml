@@ -59,7 +59,7 @@ spec:
       volumes:
         - name: prosody
           configMap:
-            name: prosody
+            name: {{ $.Values.prosody.configMap.name }}
             items:
               - key: mod_prometheus.lua
                 path: mod_prometheus.lua
