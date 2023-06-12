@@ -65,6 +65,9 @@ jvb:
   # so this won't provide a usable IP for users to connect to.
   # Will rely on STUN providing the correct public IP if set to false.
   provideNodeAddressAsPublicIP: false
+  # If you want to force an IP to advertise, enter an IP in advertiseIP
+  # mutually exclusive with provideNodeAddressAsPublicIP
+  advertiseIP:
   advertisePrivateCandidates: false
   resources:
     requests:

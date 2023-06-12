@@ -108,6 +108,9 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
+      {{- else if $.Values.jvb.advertiseIP }}
+        - name: JVB_ADVERTISE_IPS
+          value: {{ $.Values.jvb.advertiseIP }}
       {{- end }}
         - name: XMPP_DOMAIN
           value: meet.jitsi
