@@ -74,6 +74,10 @@ spec:
           httpGet:
             path: /stats
             port: metrics
+        readinessProbe:
+          httpGet:
+            path: /stats
+            port: metrics
         volumeMounts:
         - mountPath: /usr/local/etc/haproxy/haproxy.cfg
           name: haproxy-config

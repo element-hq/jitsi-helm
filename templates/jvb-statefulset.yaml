@@ -62,14 +62,18 @@ spec:
           httpGet:
             port: metrics
             path: "/health"
-        name: prometheus-exporter
-        ports:
-        - containerPort: 9888
-          name: metrics
         readinessProbe:
           httpGet:
             port: metrics
             path: "/health"
+        startupProbe:
+          httpGet:
+            port: metrics
+            path: "/health"
+        name: prometheus-exporter
+        ports:
+        - containerPort: 9888
+          name: metrics
         resources:
           limits:
             cpu: 100m
@@ -171,7 +175,7 @@ spec:
             exec:
               command:
               - bash
-              - /shutdown/graceful_shutdown.sh
+              - {{ $.Values.jvb.shutdownScriptPath }}
               - -t 3
         name: jvb
         ports:
@@ -194,6 +198,10 @@ spec:
           httpGet:
             path: /about/health
             port: private-http
+        livenessProbe:
+          httpGet:
+            path: /about/health
+            port: private-http
       {{- with $.Values.jvb.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
@@ -202,8 +210,9 @@ spec:
         - mountPath: {{ $.Values.jvb.entryPointMountPath }}
           name: jvb-entrypoint
       {{- with $.Values.jvb.gracefulShutdownConfigMap }}
-        - mountPath: /shutdown
+        - mountPath: {{ $.Values.jvb.shutdownScriptPath }}
           name: jvb-shutdown
+          subPath: graceful_shutdown.sh
       {{- end }}
       {{- with $.Values.jvb.extraVolumeMounts }}
         {{- toYaml . | nindent 8 }}
@@ -214,12 +223,12 @@ spec:
       terminationGracePeriodSeconds: 2147483647
       volumes:
       - configMap:
-          defaultMode: 484
+          defaultMode: 508
           name: jvb-entrypoint
         name: jvb-entrypoint
     {{- with $.Values.jvb.gracefulShutdownConfigMap }}
       - configMap:
-          defaultMode: 484
+          defaultMode: 508
           name: {{ $.Values.jvb.gracefulShutdownConfigMap.name }}
         name: jvb-shutdown
     {{- end }}
