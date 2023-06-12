@@ -5,5 +5,8 @@ kind: ConfigMap
 metadata:
   labels:
     scope: jitsi
+  {{- with $.Values.sharedConfigExtraLabels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   name: {{ $.Values.sharedConfigMapName }}
   namespace: {{ $.Release.Namespace }}
