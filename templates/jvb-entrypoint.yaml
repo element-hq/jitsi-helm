@@ -5,11 +5,7 @@ data:
     {{- tpl (.Files.Get "configs/jvb/entrypoint.sh") . | nindent 4 }}
 kind: ConfigMap
 metadata:
-  labels:
-    scope: jitsi
-  {{- with $.Values.jvb.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.jvbGlobal.labels" $ | nindent 4 }}
   name: {{ $.Values.jvb.entryPointConfigMap.name }}
   namespace: {{ $.Release.Namespace }}
 {{- end }}

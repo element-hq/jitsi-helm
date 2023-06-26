@@ -7,4 +7,5 @@ kind: ConfigMap
 metadata:
   name: haproxy-config
   namespace: {{ $.Release.Namespace }}
+  labels: {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
 {{ end -}}

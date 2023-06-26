@@ -2,11 +2,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  labels:
-    k8s-app: {{ $.Values.haproxy.name }}
-  {{- with $.Values.haproxy.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
   annotations:
     checksum/config: {{ tpl (.Files.Get "configs/haproxy/haproxy.cfg") . | sha256sum }}
   {{- with $.Values.haproxy.extraAnnotations }}
@@ -17,16 +13,11 @@ metadata:
 spec:
   replicas: 2
   selector:
-    matchLabels:
-      k8s-app: {{ $.Values.haproxy.name }}
+    matchLabels: {{ include "jitsi.haproxy.selectorLabels" $ | nindent 6 }}
   serviceName: {{ $.Values.haproxy.name }}
   template:
     metadata:
-      labels:
-        k8s-app: {{ $.Values.haproxy.name }}
-        {{- with $.Values.haproxy.extraLabels }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
+      labels: {{ include "jitsi.haproxy.labels" $ | nindent 8 }}
       annotations:
         checksum/config: {{ tpl (.Files.Get "configs/haproxy/haproxy.cfg") . | sha256sum }}
       {{- with $.Values.haproxy.extraAnnotations }}
@@ -45,11 +36,7 @@ spec:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
-              matchExpressions:
-              - key: k8s-app
-                operator: In
-                values:
-                - {{ $.Values.haproxy.name }}
+              matchLabels: {{ include "jitsi.haproxy.selectorLabels" $ | nindent 16 }}
             topologyKey: topology.kubernetes.io/zone
       containers:
       - env:

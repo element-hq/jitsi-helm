@@ -5,14 +5,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    scope: jitsi
-    service: jvb
-    shard: {{ $shard | quote }}
-    replica: {{ $replica | quote }}
-  {{- with $.Values.jvb.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.jvbReplica.labels" (merge (dict "RelativeScope" (dict "shard" $shard "replica" $replica)) $) | nindent 4 }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}-{{ $replica }}-ice
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -26,8 +19,7 @@ spec:
     nodePort: {{ $.Values.jvb.nodeportPrefix }}{{ add $shard 3 }}{{ printf "%02d" $replica }}
   selector:
     statefulset.kubernetes.io/pod-name: shard-{{ $shard }}-{{ $.Values.jvb.name }}-{{ $replica }}
-    scope: jitsi
-    shard: {{ $shard | quote }}
+    {{ include "jitsi.jvbShard.labels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 4 }}
 {{ end -}}
 ---
 apiVersion: v1
@@ -37,14 +29,7 @@ metadata:
   annotations:
     {{ toYaml . | nindent 4 }}
 {{ end }}
-  labels:
-    scope: jitsi
-    service: jvb
-    shard: {{ $shard | quote }}
-    replica: {{ $replica | quote }}
-  {{- with $.Values.jvb.monitoring.service.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.jvbReplicaMonitoring.labels" (merge (dict "RelativeScope" (dict "shard" $shard "replica" $replica)) $) | nindent 4 }}
   name: shard-{{ $shard }}-{{ $.Values.jvb.name }}-{{ $replica }}-metrics
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -56,7 +41,6 @@ spec:
     targetPort: metrics
   selector:
     statefulset.kubernetes.io/pod-name: shard-{{ $shard }}-{{ $.Values.jvb.name }}-{{ $replica }}
-    scope: jitsi
-    shard: {{ $shard | quote }}
+    {{ include "jitsi.jvbShard.labels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 4 }}
 {{ end -}}
 {{ end -}}

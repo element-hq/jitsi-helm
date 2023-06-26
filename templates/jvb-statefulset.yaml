@@ -4,13 +4,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  labels:
-    k8s-app: {{ $.Values.jvb.name }}
-    scope: jitsi
-    shard: {{ $shard | quote }}
-  {{- with $.Values.jvb.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.jvbShard.labels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 4 }}
   annotations:
     configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
   {{- with $.Values.jvb.extraAnnotations }}
@@ -22,20 +16,11 @@ spec:
   podManagementPolicy: Parallel
   replicas: {{ $.Values.jvb.replicas }}
   selector:
-    matchLabels:
-      k8s-app: {{ $.Values.jvb.name }}
-      scope: jitsi
-      shard: {{ $shard | quote }}
+    matchLabels: {{ include "jitsi.jvbShard.selectorLabels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 6 }}
   serviceName: jvb
   template:
     metadata:
-      labels:
-        k8s-app: {{ $.Values.jvb.name }}
-        scope: jitsi
-        shard: {{ $shard | quote }}
-      {{- with $.Values.jvb.extraLabels }}
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      labels: {{ include "jitsi.jvbShard.labels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 8 }}
       annotations:
         configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
         kubectl.kubernetes.io/default-container: jvb

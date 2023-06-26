@@ -5,12 +5,7 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  labels:
-    k8s-app: sysctl-jvb
-    scope: jitsi
-    {{- with $.Values.sysctljvb.extraLabels }}
-      {{- toYaml . | nindent 6 }}
-    {{- end }}
+  labels: {{ include "jitsi.sysctlJvb.labels" $ | nindent 4 }}
   annotations:
     configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
   {{- with $.Values.sysctljvb.extraAnnotations }}
@@ -20,14 +15,10 @@ metadata:
   namespace: {{ $.Release.Namespace }}
 spec:
   selector:
-    matchLabels:
-      k8s-app: sysctl-jvb
-      scope: jitsi
+    matchLabels: {{ include "jitsi.sysctlJvb.labels" $ | nindent 6 }}
   template:
     metadata:
-      labels:
-        k8s-app: sysctl-jvb
-        scope: jitsi
+      labels: {{ include "jitsi.sysctlJvb.labels" $ | nindent 8 }}
     {{- with $.Values.sysctljvb.extraLabels }}
       {{- toYaml . | nindent 8 }}
     {{- end }}

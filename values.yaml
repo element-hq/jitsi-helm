@@ -19,11 +19,13 @@ ingress:
     # certManagerClusterIssuer
   annotations: {}
   extraPaths: []
+  extraLabels: {}
 
 haproxy:
   name: haproxy
   image: haproxy:2.4
   extraPodSpec: {}
+  extraLabels: {}
 jicofo:
   name: jicofo
   imagePullPolicy: Always

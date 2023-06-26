@@ -3,13 +3,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    scope: jitsi
-    service: {{ $.Values.web.name }}
-    shard: {{ $shard | quote}}
-  {{- with $.Values.web.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.webShard.labels" (merge (dict "RelativeScope" .) $) | nindent 4 }}
   name: shard-{{ $shard }}-{{ $.Values.web.name }}
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -17,8 +11,5 @@ spec:
   - name: http
     port: {{ $.Values.web.httpPort }}
     targetPort: http
-  selector:
-    k8s-app: {{ $.Values.web.name }}
-    scope: jitsi
-    shard: {{ $shard | quote}}
+  selector: {{ include "jitsi.webShard.selectorLabels" (merge (dict "RelativeScope" .) $) | nindent 4 }}
 {{- end }}

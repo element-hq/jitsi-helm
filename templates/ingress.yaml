@@ -12,11 +12,7 @@ metadata:
     {{- end }}
   name:  {{ $.Values.ingress.name }}
   namespace: {{ $.Release.Namespace }}
-  labels:
-    scope: jitsi
-  {{- with $.Values.ingress.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.ingress.labels" $ | nindent 4 }}
 spec:
   {{ if $.Values.ingress.class -}}
   ingressClassName: {{ $.Values.ingress.class }}

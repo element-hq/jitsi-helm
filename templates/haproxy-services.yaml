@@ -4,10 +4,7 @@ kind: Service
 metadata:
   name: {{ $.Values.haproxy.name }}
   namespace: {{ $.Release.Namespace }}
-  {{- with $.Values.haproxy.extraLabels }}
-  labels:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
 spec:
   ports:
   - name: http
@@ -16,8 +13,7 @@ spec:
   - name: metrics
     port: 9090
     targetPort: metrics
-  selector:
-    k8s-app: {{ $.Values.haproxy.name }}
+  selector: {{ include "jitsi.haproxy.selectorLabels" $ | nindent 6 }}
   type: ClusterIP
 ---
 apiVersion: v1
@@ -25,13 +21,15 @@ kind: Service
 metadata:
   name: {{ $.Values.haproxy.name }}-0
   namespace: {{ $.Release.Namespace }}
+  labels: {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
 spec:
   ports:
   - name: peering
     port: 1024
     targetPort: peering
   selector:
-   statefulset.kubernetes.io/pod-name: {{ $.Values.haproxy.name }}-0
+    statefulset.kubernetes.io/pod-name: {{ $.Values.haproxy.name }}-0
+    {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
   type: ClusterIP
 ---
 apiVersion: v1
@@ -39,12 +37,14 @@ kind: Service
 metadata:
   name: {{ $.Values.haproxy.name }}-1
   namespace: {{ $.Release.Namespace }}
+  labels: {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
 spec:
   ports:
   - name: peering
     port: 1024
     targetPort: peering
   selector:
-   statefulset.kubernetes.io/pod-name: {{ $.Values.haproxy.name }}-1
+    statefulset.kubernetes.io/pod-name: {{ $.Values.haproxy.name }}-1
+    {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
   type: ClusterIP
 {{ end -}}

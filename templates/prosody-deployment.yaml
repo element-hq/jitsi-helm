@@ -3,13 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    k8s-app: {{ $.Values.prosody.name }}
-    scope: jitsi
-    shard: {{ $shard | quote}}
-  {{- with $.Values.prosody.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.prosodyShard.labels" (merge (dict "RelativeScope" .) $) | nindent 4 }}
   annotations:
     configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
   {{- with $.Values.prosody.extraAnnotations }}
@@ -20,10 +14,7 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchLabels:
-      k8s-app: {{ $.Values.prosody.name }}
-      scope: jitsi
-      shard: {{ $shard | quote}}
+    matchLabels: {{ include "jitsi.prosodyShard.selectorLabels" (merge (dict "RelativeScope" .) $) | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -31,13 +22,7 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      labels:
-        k8s-app: {{ $.Values.prosody.name }}
-        scope: jitsi
-        shard: {{ $shard | quote}}
-      {{- with $.Values.prosody.extraLabels }}
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      labels: {{ include "jitsi.prosodyShard.labels" (merge (dict "RelativeScope" .) $) | nindent 8 }}
       annotations:
         configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
       {{ if $.Values.prosody.monitoringEnable  }}

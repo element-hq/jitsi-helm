@@ -5,11 +5,7 @@ data:
     {{- .Files.Get "configs/jvb/graceful_shutdown.sh" | nindent 4 }}
 kind: ConfigMap
 metadata:
-  labels:
-    scope: jitsi
-  {{- with $.Values.jvb.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.jvbGlobal.labels" $ | nindent 4 }}
   name: {{ $.Values.jvb.gracefulShutdownConfigMap.name }}
   namespace: {{ $.Release.Namespace }}
 {{- end }}
