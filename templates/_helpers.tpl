@@ -176,6 +176,18 @@ app.kubernetes.io/component: jitsi-ingress
 {{- end }}
 {{- end -}}
 
+{{- define "jitsi.jvb.entryPointConfigMap.name" -}}
+{{ $.Values.jvb.entryPointConfigMap.name | default (print (include "jitsi.name" .) "-jvb-entrypoint") }}
+{{- end -}}
+
+{{- define "jitsi.jvb.gracefulShutdownConfigMap.name" -}}
+{{ $.Values.jvb.gracefulShutdownConfigMap.name | default (print (include "jitsi.name" .) "-jvb-shutdown") }}
+{{- end -}}
+
+{{- define "jitsi.sharedConfigMap.name" -}}
+{{ $.Values.sharedConfigMapName | default (print (include "jitsi.name" .) "-config") }}
+{{- end -}}
+
 {{/*
 Define a helper function to output the data of the shared ConfigMap
 */}}
@@ -192,3 +204,7 @@ Define a helper function to create a hash of the output of the previous function
 {{- $cm := include "jitsi.sharedconfigmap.data" . | sha256sum }}
 {{- printf "%s" (trunc 63 $cm) -}}
 {{- end }}
+
+{{- define "jitsi.sharedSecret.name" -}}
+{{ $.Values.secretName | default (include "jitsi.name" .) }}
+{{- end -}}

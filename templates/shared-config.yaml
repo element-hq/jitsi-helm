@@ -4,5 +4,5 @@ data:
 kind: ConfigMap
 metadata:
   labels: {{ include "jitsi.config.labels" $ | nindent 4 }}
-  name: {{ $.Values.sharedConfigMapName }}
+  name: {{ include "jitsi.sharedConfigMap.name" $ }}
   namespace: {{ $.Release.Namespace }}

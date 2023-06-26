@@ -9,7 +9,7 @@ metadata:
   {{- with $.Values.prosody.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: shard-{{ $shard }}-{{ $.Values.prosody.name }}
+  name: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-prosody
   namespace: {{ $.Release.Namespace }}
 spec:
   replicas: 1
@@ -44,7 +44,7 @@ spec:
       volumes:
         - name: prosody
           configMap:
-            name: {{ $.Values.prosody.configMap.name }}
+            name: {{ include "jitsi.name" $ }}-prosody-config
             items:
               - key: mod_prometheus.lua
                 path: mod_prometheus.lua
@@ -132,26 +132,26 @@ spec:
             - name: JICOFO_COMPONENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ $.Values.secretName }}
+                  name: {{ include "jitsi.sharedSecret.name" $ }}
                   key: JICOFO_COMPONENT_SECRET
             - name: JVB_AUTH_USER
               value: jvb
             - name: JVB_AUTH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ $.Values.secretName }}
+                  name: {{ include "jitsi.sharedSecret.name" $ }}
                   key: JVB_AUTH_PASSWORD
             - name: JICOFO_AUTH_USER
               value: focus
             - name: JICOFO_AUTH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ $.Values.secretName }}
+                  name: {{ include "jitsi.sharedSecret.name" $ }}
                   key: JICOFO_AUTH_PASSWORD
             - name: TZ
               valueFrom:
                 configMapKeyRef:
-                  name: {{ $.Values.sharedConfigMapName }}
+                  name: {{ include "jitsi.sharedConfigMap.name" $ }}
                   key: TZ
             {{ if $.Values.prosody.monitoringEnable }}
             # activate add-ons that enrich the available stats of prosody
@@ -173,7 +173,7 @@ spec:
             - name: PUBLIC_URL
               valueFrom:
                 configMapKeyRef:
-                  name: {{ $.Values.sharedConfigMapName }}
+                  name: {{ include "jitsi.sharedConfigMap.name" $ }}
                   key: PUBLIC_URL
           {{- if $.Values.prosody.extraEnvs }}
             {{- toYaml $.Values.prosody.extraEnvs | nindent 12 }}

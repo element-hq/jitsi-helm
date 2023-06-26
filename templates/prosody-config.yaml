@@ -9,5 +9,5 @@ data:
 kind: ConfigMap
 metadata:
   labels: {{ include "jitsi.prosodyGlobal.labels" $ | nindent 4 }}
-  name: {{ $.Values.prosody.configMap.name }}
+  name: {{ include "jitsi.name" $ }}-prosody-config
   namespace: {{ $.Release.Namespace }}

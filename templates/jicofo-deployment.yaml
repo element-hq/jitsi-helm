@@ -9,7 +9,7 @@ metadata:
   {{- with $.Values.jicofo.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: shard-{{ $shard }}-{{ $.Values.jicofo.name }}
+  name: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-jicofo
   namespace: {{ $.Release.Namespace }}
 spec:
   replicas: 1
@@ -40,7 +40,7 @@ spec:
       containers:
       - env:
         - name: XMPP_SERVER
-          value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Release.Namespace }}.svc.cluster.local
+          value: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-prosody.{{ $.Release.Namespace }}.svc.cluster.local
         - name: XMPP_DOMAIN
           value: meet.jitsi
         - name: XMPP_AUTH_DOMAIN
@@ -51,19 +51,19 @@ spec:
           valueFrom:
             secretKeyRef:
               key: JICOFO_COMPONENT_SECRET
-              name: {{ $.Values.secretName }}
+              name: {{ include "jitsi.sharedSecret.name" $ }}
         - name: JICOFO_AUTH_USER
           value: focus
         - name: JICOFO_AUTH_PASSWORD
           valueFrom:
             secretKeyRef:
               key: JICOFO_AUTH_PASSWORD
-              name: {{ $.Values.secretName }}
+              name: {{ include "jitsi.sharedSecret.name" $ }}
         - name: TZ
           valueFrom:
             configMapKeyRef:
               key: TZ
-              name: {{ $.Values.sharedConfigMapName }}
+              name: {{ include "jitsi.sharedConfigMap.name" $ }}
         - name: JVB_BREWERY_MUC
           value: jvbbrewery
         - name: JICOFO_ENABLE_HEALTH_CHECKS

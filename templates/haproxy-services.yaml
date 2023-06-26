@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $.Values.haproxy.name }}
+  name: {{ include "jitsi.name" $ }}-haproxy
   namespace: {{ $.Release.Namespace }}
   labels: {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
 spec:
@@ -19,7 +19,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $.Values.haproxy.name }}-0
+  name: {{ include "jitsi.name" $ }}-haproxy-0
   namespace: {{ $.Release.Namespace }}
   labels: {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
 spec:
@@ -28,14 +28,14 @@ spec:
     port: 1024
     targetPort: peering
   selector:
-    statefulset.kubernetes.io/pod-name: {{ $.Values.haproxy.name }}-0
+    statefulset.kubernetes.io/pod-name: {{ include "jitsi.name" $ }}-haproxy-0
     {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
   type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $.Values.haproxy.name }}-1
+  name: {{ include "jitsi.name" $ }}-haproxy-1
   namespace: {{ $.Release.Namespace }}
   labels: {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
 spec:
@@ -44,7 +44,7 @@ spec:
     port: 1024
     targetPort: peering
   selector:
-    statefulset.kubernetes.io/pod-name: {{ $.Values.haproxy.name }}-1
+    statefulset.kubernetes.io/pod-name: {{ include "jitsi.name" $ }}-haproxy-1
     {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
   type: ClusterIP
 {{ end -}}

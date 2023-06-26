@@ -4,7 +4,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels: {{ include "jitsi.webShard.labels" (merge (dict "RelativeScope" .) $) | nindent 4 }}
-  name: shard-{{ $shard }}-{{ $.Values.web.name }}
+  name: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-web
   namespace: {{ $.Release.Namespace }}
 spec:
   ports:

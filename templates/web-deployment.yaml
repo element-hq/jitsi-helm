@@ -9,7 +9,7 @@ metadata:
   {{- with $.Values.web.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: shard-{{ $shard }}-{{ $.Values.web.name }}
+  name: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-web
   namespace: {{ $.Release.Namespace }}
 spec:
   replicas: {{ $.Values.web.replicas }}
@@ -45,7 +45,7 @@ spec:
         - name: HTTP_PORT
           value: "{{ $.Values.web.httpPort }}"
         - name: XMPP_SERVER
-          value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Release.Namespace }}.svc.cluster.local
+          value: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-prosody.{{ $.Release.Namespace }}.svc.cluster.local
         - name: JICOFO_AUTH_USER
           value: focus
         - name: XMPP_DOMAIN
@@ -55,18 +55,18 @@ spec:
         - name: XMPP_INTERNAL_MUC_DOMAIN
           value: internal-muc.meet.jitsi
         - name: XMPP_BOSH_URL_BASE
-          value: http://shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Release.Namespace }}.svc.cluster.local:5280
+          value: http://{{ include "jitsi.name" $ }}-shard-{{ $shard }}-prosody.{{ $.Release.Namespace }}.svc.cluster.local:5280
         - name: XMPP_MUC_DOMAIN
           value: muc.meet.jitsi
         - name: TZ
           valueFrom:
             configMapKeyRef:
               key: TZ
-              name: {{ $.Values.sharedConfigMapName }}
+              name: {{ include "jitsi.sharedConfigMap.name" $ }}
         - name: PUBLIC_URL
           valueFrom:
             configMapKeyRef:
-              name: {{ $.Values.sharedConfigMapName }}
+              name: {{ include "jitsi.sharedConfigMap.name" $ }}
               key: PUBLIC_URL
       {{- if $.Values.web.extraEnvs }}
         {{- toYaml $.Values.web.extraEnvs | nindent 8 }}

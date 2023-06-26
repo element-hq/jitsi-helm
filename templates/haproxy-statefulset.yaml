@@ -8,13 +8,13 @@ metadata:
   {{- with $.Values.haproxy.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: {{ $.Values.haproxy.name }}
+  name: {{ include "jitsi.name" $ }}-haproxy
   namespace: {{ $.Release.Namespace }}
 spec:
   replicas: 2
   selector:
     matchLabels: {{ include "jitsi.haproxy.selectorLabels" $ | nindent 6 }}
-  serviceName: {{ $.Values.haproxy.name }}
+  serviceName: {{ include "jitsi.name" $ }}-haproxy
   template:
     metadata:
       labels: {{ include "jitsi.haproxy.labels" $ | nindent 8 }}
@@ -84,7 +84,7 @@ spec:
           items:
           - key: haproxy.cfg
             path: haproxy.cfg
-          name: haproxy-config
+          name: {{ include "jitsi.name" $ }}-haproxy-config
         name: haproxy-config
     {{- with $.Values.haproxy.extraVolumes }}
       {{- toYaml . | nindent 6 }}

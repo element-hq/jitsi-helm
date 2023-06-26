@@ -6,11 +6,9 @@ global:
   # serviceAccount: "default"
 
 shardCount: 1
-secretName: jitsi-secrets
 
 ingress:
   enabled: true
-  name: ingress
   hosts: []
   # class:
   tls:
@@ -22,12 +20,10 @@ ingress:
   extraLabels: {}
 
 haproxy:
-  name: haproxy
   image: haproxy:2.4
   extraPodSpec: {}
   extraLabels: {}
 jicofo:
-  name: jicofo
   imagePullPolicy: Always
   resources:
     requests:
@@ -41,7 +37,6 @@ jicofo:
   extraVolumes: []
   extraVolumeMounts: []
 jvb:
-  name: jvb
   replicas: 2
   # Specify hostPort to use hostPort and not nodePort
   # Nodeports 30XXX will be used by default
@@ -88,11 +83,11 @@ jvb:
   entryPointConfigMap:
     enable: true
     create: true
-    name: jvb-entrypoint
+    # name - will have `-jvb-entrypoint` as the suffix on the common prefix (Chart Name if no nameOverride set)
   gracefulShutdownConfigMap:
     enable: true
     create: true
-    name: jvb-shutdown
+    # name - will have `-jvb-shutdown` as the suffix on the common prefix (Chart Name if no nameOverride set)
   # change to /usr/bin/graceful_shutdown if using  matrix.org/docker-jitsi-meet openshift images
   shutdownScriptPath: "/shutdown/graceful_shutdown.sh"
   extraEnvs: []
@@ -101,15 +96,12 @@ jvb:
   extraLabels: {}
   extraAnnotations: {}
 prosody:
-  name: prosody
   imagePullPolicy: Always
   monitoringEnable: true
   resources:
     requests:
       memory: 300Mi
       cpu: 300m
-  configMap:
-    name: prosody
   extraEnvs: []
   extraPodSpec: {}
   extraVolumes: []
@@ -120,7 +112,6 @@ prosody:
   extraLabels: {}
   extraAnnotations: {}
 web:
-  name: web
   replicas: 2
   imagePullPolicy: Always
   ## kubectl create configmap -n <namespace> custom-config --from-file=custom-config.js

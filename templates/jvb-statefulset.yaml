@@ -10,7 +10,7 @@ metadata:
   {{- with $.Values.jvb.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: shard-{{ $shard }}-{{ $.Values.jvb.name }}
+  name: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-jvb
   namespace: {{ $.Release.Namespace }}
 spec:
   podManagementPolicy: Parallel
@@ -80,7 +80,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: XMPP_SERVER
-          value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Release.Namespace }}.svc.cluster.local
+          value: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-prosody.{{ $.Release.Namespace }}.svc.cluster.local
       {{- if $.Values.jvb.provideNodeAddressAsPublicIP }}
         - name: DOCKER_HOST_ADDRESS
           valueFrom:
@@ -104,7 +104,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: JVB_STUN_SERVERS
-              name: {{ $.Values.sharedConfigMapName }}
+              name: {{ include "jitsi.sharedConfigMap.name" $ }}
         - name: COLIBRI_REST_ENABLED
           value: "true"
         - name: SHUTDOWN_REST_ENABLED
@@ -115,18 +115,18 @@ spec:
           valueFrom:
             secretKeyRef:
               key: JVB_AUTH_PASSWORD
-              name: {{ $.Values.secretName }}
+              name: {{ include "jitsi.sharedSecret.name" $ }}
         - name: JVB_BREWERY_MUC
           value: jvbbrewery
         - name: TZ
           valueFrom:
             configMapKeyRef:
               key: TZ
-              name: {{ $.Values.sharedConfigMapName }}
+              name: {{ include "jitsi.sharedConfigMap.name" $ }}
         - name: PUBLIC_URL
           valueFrom:
             configMapKeyRef:
-              name: {{ $.Values.sharedConfigMapName }}
+              name: {{ include "jitsi.sharedConfigMap.name" $ }}
               key: PUBLIC_URL
         - name: JVB_WS_SERVER_ID
           valueFrom:
@@ -212,13 +212,13 @@ spec:
       volumes:
       - configMap:
           defaultMode: 508
-          name: {{ $.Values.jvb.entryPointConfigMap.name }}
+          name: {{ include "jitsi.jvb.entryPointConfigMap.name" $ }}
         name: jvb-entrypoint
     {{- end }}
     {{- if $.Values.jvb.gracefulShutdownConfigMap.enable }}
       - configMap:
           defaultMode: 508
-          name: {{ $.Values.jvb.gracefulShutdownConfigMap.name }}
+          name: {{ include "jitsi.jvb.gracefulShutdownConfigMap.name" $ }}
         name: jvb-shutdown
     {{- end }}
     {{- with $.Values.jvb.extraVolumes }}

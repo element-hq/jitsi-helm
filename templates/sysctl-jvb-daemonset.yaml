@@ -11,7 +11,7 @@ metadata:
   {{- with $.Values.sysctljvb.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: sysctl-jvb
+  name: {{ include "jitsi.name" . }}-sysctl-jvb
   namespace: {{ $.Release.Namespace }}
 spec:
   selector:

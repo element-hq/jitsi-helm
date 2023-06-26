@@ -6,6 +6,6 @@ data:
 kind: ConfigMap
 metadata:
   labels: {{ include "jitsi.jvbGlobal.labels" $ | nindent 4 }}
-  name: {{ $.Values.jvb.gracefulShutdownConfigMap.name }}
+  name: {{ include "jitsi.jvb.gracefulShutdownConfigMap.name" $ }}
   namespace: {{ $.Release.Namespace }}
 {{- end }}
