@@ -5,7 +5,7 @@ kind: Deployment
 metadata:
   labels: {{ include "jitsi.webShard.labels" (merge (dict "RelativeScope" .) $) | nindent 4 }}
   annotations:
-    configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+    configmap-hash: {{ include "jitsi.sharedConfigMap.hash" $ }}
   {{- with $.Values.web.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -24,7 +24,7 @@ spec:
     metadata:
       labels: {{ include "jitsi.webShard.labels" (merge (dict "RelativeScope" .) $) | nindent 8 }}
       annotations:
-        configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+        configmap-hash: {{ include "jitsi.sharedConfigMap.hash" $ }}
       {{- with $.Values.web.extraAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

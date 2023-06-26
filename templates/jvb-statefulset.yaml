@@ -6,7 +6,7 @@ kind: StatefulSet
 metadata:
   labels: {{ include "jitsi.jvbShard.labels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 4 }}
   annotations:
-    configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+    configmap-hash: {{ include "jitsi.sharedConfigMap.hash" $ }}
   {{- with $.Values.jvb.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -22,7 +22,7 @@ spec:
     metadata:
       labels: {{ include "jitsi.jvbShard.labels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 8 }}
       annotations:
-        configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+        configmap-hash: {{ include "jitsi.sharedConfigMap.hash" $ }}
         kubectl.kubernetes.io/default-container: jvb
       {{ if $.Values.jvb.monitoringEnable }}
         prometheus.io/scrape: "true"

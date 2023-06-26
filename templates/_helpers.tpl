@@ -191,7 +191,7 @@ app.kubernetes.io/component: jitsi-ingress
 {{/*
 Define a helper function to output the data of the shared ConfigMap
 */}}
-{{- define "jitsi.sharedconfigmap.data" -}}
+{{- define "jitsi.sharedConfigMap.data" -}}
 JVB_STUN_SERVERS: {{ $.Values.JVB_STUN_SERVERS }}
 PUBLIC_URL: {{ ((gt (len $.Values.ingress.hosts) 0) | ternary (print "https://" ($.Values.ingress.hosts | first)) $.Values.PUBLIC_URL) | required "One of PUBLIC_URL or ingress.hosts must be provided" }}
 TZ: {{ $.Values.TZ }}
@@ -200,8 +200,8 @@ TZ: {{ $.Values.TZ }}
 {{/*
 Define a helper function to create a hash of the output of the previous function
 */}}
-{{- define "jitsi.sharedconfigmap.hash" -}}
-{{- $cm := include "jitsi.sharedconfigmap.data" . | sha256sum }}
+{{- define "jitsi.sharedConfigMap.hash" -}}
+{{- $cm := include "jitsi.sharedConfigMap.data" . | sha256sum }}
 {{- printf "%s" (trunc 63 $cm) -}}
 {{- end }}
 

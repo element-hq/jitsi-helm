@@ -7,7 +7,7 @@ kind: DaemonSet
 metadata:
   labels: {{ include "jitsi.sysctlJvb.labels" $ | nindent 4 }}
   annotations:
-    configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+    configmap-hash: {{ include "jitsi.sharedConfigMap.hash" $ }}
   {{- with $.Values.sysctljvb.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -22,8 +22,9 @@ spec:
     {{- with $.Values.sysctljvb.extraLabels }}
       {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $.Values.sysctljvb.extraAnnotations }}
       annotations:
+        configmap-hash: {{ include "jitsi.sharedConfigMap.hash" $ }}
+    {{- with $.Values.sysctljvb.extraAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
     spec:
