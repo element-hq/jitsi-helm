@@ -57,8 +57,6 @@ The following table lists the configurable parameters of the Jitsi Meet chart an
 | Parameter                          | Description                                             | Default           |
 |------------------------------------|---------------------------------------------------------|-------------------|
 | `shardCount`                       | Number of shards                                        | `2`               |
-| `namespace`                        | Namespace                                               | `jitsi`           |
-| `haproxy.name`                     | Haproxy statefulset name                                | `jitsi/jicofo`    |
 | `haproxy.image`                    | Docker image                                            | `haproxy:2.1`     |
 | `ingress.enabled`                  | Enable ingress                                          | `true`            |
 | `ingress.hosts`                    | List of hosts in this ingress                           | empty             |
@@ -66,11 +64,9 @@ The following table lists the configurable parameters of the Jitsi Meet chart an
 | `ingress.tls.enabled`              | Enable TLS for ingress                                  | `true`            |
 | `ingress.tls.secretName`           | Name of the secret storing the TLS certificate and key  | `jitsi-tls`       |
 | `ingress.extraPaths    `           | Extra paths to add to the ingress                       | `[]`              |
-| `jicofo.name`                      | Jicofo deployment name                                  | `jicofo`          |
 | `jicofo.image`                     | Jicofo docker image                                     | `jitsi/jicofo`    |
 | `jicofo.imagePullPolicy`           | Jicofo image pull policy                                | `Always`          |
 | `jicofo.extraEnvs`                 | Jicofo extra environment variables                      | `[]`              |
-| `jvb.name`                         | JVB statefulset name                                    | `jitsi/jvb`       |
 | `jvb.image`                        | JVB docker image                                        | `jitsi/jvb`       |
 | `jvb.image.imagePullPolicy`        | JVB image pull policy                                   | `Always`          |
 | `jvb.replicas`                     | JVB replica count                                       | `1`               |
@@ -78,7 +74,6 @@ The following table lists the configurable parameters of the Jitsi Meet chart an
 | `jvb.hostPort`                     | JVB hostPort                                            | empty             |
 | `jvb.nodeportPrefix`               | JVB Node port prefix                                    | `30`              |
 | `jvb.extraEnvs`                    | JVB extra environment variables                         | `[]`              |
-| `prosody.name`                     | Prosody deployment name                                 | `jitsi/prosody`   |
 | `prosody.image`                    | Prosody docker image                                    | `jitsi/prosody`   |
 | `prosody.image.imagePullPolicy`    | Prosody image pull policy                               | `Always`          |
 | `prosody.extraEnvs`                | Extra env var for prosody deployment                    | `[]`              |
@@ -86,7 +81,6 @@ The following table lists the configurable parameters of the Jitsi Meet chart an
 | `prosody.extraVolumeMounts`        | Additional volume mounts to the prosody deployment      | `[]`              |
 | `prosody.globalModules`            | Additional global modules to enable on prosody          | `[]`              |
 | `prosody.globalConfig`             | Additional global config parameters on prosody          | `[]`              |
-| `web.name`                         | Web deployment name                                     | `web`             |
 | `web.image`                        | Web docker image                                        | `jitsi/web`       |
 | `web.image.imagePullPolicy`        | Web image pull policy                                   | `Always`          |
 | `web.extraEnvs`                    | Extra env var for web deployment                        | `[]`              |

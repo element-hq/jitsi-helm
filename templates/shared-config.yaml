@@ -1,12 +1,8 @@
 apiVersion: v1
 data:
-  {{ include "jitsi.sharedconfigmap.data" $ | nindent 2 }}
+  {{ include "jitsi.sharedConfigMap.data" $ | nindent 2 }}
 kind: ConfigMap
 metadata:
-  labels:
-    scope: jitsi
-  {{- with $.Values.sharedConfigMapExtraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-  name: {{ $.Values.sharedConfigMapName }}
+  labels: {{ include "jitsi.config.labels" $ | nindent 4 }}
+  name: {{ include "jitsi.sharedConfigMap.name" $ }}
   namespace: {{ $.Release.Namespace }}

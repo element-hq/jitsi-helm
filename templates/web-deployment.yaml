@@ -3,27 +3,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    k8s-app: {{ $.Values.web.name }}
-    scope: jitsi
-    shard: {{ $shard | quote}}
-  {{- with $.Values.web.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.webShard.labels" (merge (dict "RelativeScope" .) $) | nindent 4 }}
   annotations:
-    configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+    configmap-hash: {{ include "jitsi.sharedConfigMap.hash" $ }}
   {{- with $.Values.web.extraAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: shard-{{ $shard }}-{{ $.Values.web.name }}
+  name: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-web
   namespace: {{ $.Release.Namespace }}
 spec:
   replicas: {{ $.Values.web.replicas }}
   selector:
-    matchLabels:
-      k8s-app: {{ $.Values.web.name }}
-      scope: jitsi
-      shard: {{ $shard | quote}}
+    matchLabels: {{ include "jitsi.webShard.selectorLabels" (merge (dict "RelativeScope" .) $) | nindent 8 }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -31,15 +22,9 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      labels:
-        k8s-app: {{ $.Values.web.name }}
-        scope: jitsi
-        shard: {{ $shard | quote}}
-      {{- with $.Values.web.extraLabels }}
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      labels: {{ include "jitsi.webShard.labels" (merge (dict "RelativeScope" .) $) | nindent 8 }}
       annotations:
-        configmap-hash: {{ include "jitsi.sharedconfigmap.hash" $ }}
+        configmap-hash: {{ include "jitsi.sharedConfigMap.hash" $ }}
       {{- with $.Values.web.extraAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -60,7 +45,7 @@ spec:
         - name: HTTP_PORT
           value: "{{ $.Values.web.httpPort }}"
         - name: XMPP_SERVER
-          value: shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Release.Namespace }}.svc.cluster.local
+          value: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-prosody.{{ $.Release.Namespace }}.svc.cluster.local
         - name: JICOFO_AUTH_USER
           value: focus
         - name: XMPP_DOMAIN
@@ -70,18 +55,18 @@ spec:
         - name: XMPP_INTERNAL_MUC_DOMAIN
           value: internal-muc.meet.jitsi
         - name: XMPP_BOSH_URL_BASE
-          value: http://shard-{{ $shard }}-{{ $.Values.prosody.name }}.{{ $.Release.Namespace }}.svc.cluster.local:5280
+          value: http://{{ include "jitsi.name" $ }}-shard-{{ $shard }}-prosody.{{ $.Release.Namespace }}.svc.cluster.local:5280
         - name: XMPP_MUC_DOMAIN
           value: muc.meet.jitsi
         - name: TZ
           valueFrom:
             configMapKeyRef:
               key: TZ
-              name: {{ $.Values.sharedConfigMapName }}
+              name: {{ include "jitsi.sharedConfigMap.name" $ }}
         - name: PUBLIC_URL
           valueFrom:
             configMapKeyRef:
-              name: {{ $.Values.sharedConfigMapName }}
+              name: {{ include "jitsi.sharedConfigMap.name" $ }}
               key: PUBLIC_URL
       {{- if $.Values.web.extraEnvs }}
         {{- toYaml $.Values.web.extraEnvs | nindent 8 }}

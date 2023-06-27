@@ -8,10 +8,6 @@ data:
     {{- .Files.Get "configs/prosody/mod_prometheus.lua" | nindent 4 }}
 kind: ConfigMap
 metadata:
-  labels:
-    scope: jitsi
-  {{- with $.Values.prosody.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-  name: {{ $.Values.prosody.configMap.name }}
+  labels: {{ include "jitsi.prosodyGlobal.labels" $ | nindent 4 }}
+  name: {{ include "jitsi.name" $ }}-prosody-config
   namespace: {{ $.Release.Namespace }}

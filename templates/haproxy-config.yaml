@@ -5,6 +5,7 @@ data:
     {{ tpl (.Files.Get "configs/haproxy/haproxy.cfg") . | nindent 4 }}
 kind: ConfigMap
 metadata:
-  name: haproxy-config
+  name: {{ include "jitsi.name" $ }}-haproxy-config
   namespace: {{ $.Release.Namespace }}
+  labels: {{ include "jitsi.haproxy.labels" $ | nindent 4 }}
 {{ end -}}

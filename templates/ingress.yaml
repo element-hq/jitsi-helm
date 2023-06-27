@@ -10,13 +10,9 @@ metadata:
     {{- if $.Values.ingress.annotations }}
     {{- $.Values.ingress.annotations | toYaml | nindent 4 }}
     {{- end }}
-  name:  {{ $.Values.ingress.name }}
+  name: {{ include "jitsi.name" . }}
   namespace: {{ $.Release.Namespace }}
-  labels:
-    scope: jitsi
-  {{- with $.Values.ingress.extraLabels }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  labels: {{ include "jitsi.ingress.labels" $ | nindent 4 }}
 spec:
   {{ if $.Values.ingress.class -}}
   ingressClassName: {{ $.Values.ingress.class }}
@@ -41,7 +37,7 @@ spec:
       {{ end -}}
       - backend:
           service:
-            name: {{ if (gt ($.Values.shardCount | int) 1) }}haproxy{{ else }}shard-0-{{ $.Values.web.name }}{{ end }}
+            name: {{ if (gt ($.Values.shardCount | int) 1) }}{{ include "jitsi.name" $ }}-haproxy{{ else }}{{ include "jitsi.name" $ }}-shard-0-web{{ end }}
             port:
               name: http
         path: /
