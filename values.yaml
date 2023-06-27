@@ -111,6 +111,29 @@ prosody:
   globalConfig: []
   extraLabels: {}
   extraAnnotations: {}
+uvs:
+  enable: false
+  canQueryPrivateIps: false
+  syncPowerLevels: true
+  image: matrixdotorg/matrix-user-verification-service:v2.0.0
+  imagePullPolicy: Always
+  replicas: 2
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 50m
+    limits:
+      memory: 300Mi
+  extraPodSpec: {}
+  extraVolumes: []
+  extraVolumeMounts: []
+  extraContainerSpec: {}
+  extraLabels: {}
+  extraAnnotations: {}
+  secrets: {}
+    # ACCESS_TOKEN - provides access to Synapse
+    # accessTokenSecretName - the above in a separate secret with the key UVS_ACCESS_TOKEN present
+    # AUTH_TOKEN - protects requests to this API
 web:
   replicas: 2
   imagePullPolicy: Always

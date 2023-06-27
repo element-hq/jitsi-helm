@@ -138,6 +138,11 @@ spec:
           name: watermark
           subPath: watermark.png
         {{ end }}
+        {{- if $.Values.uvs.enable }}
+        - mountPath: /usr/share/jitsi-meet/.well-known/element
+          name: uvs-wellknown
+          readOnly: true
+        {{- end }}
       {{- if $.Values.web.extraVolumeMounts }}
         {{- toYaml $.Values.web.extraVolumeMounts | nindent 8 }}
       {{- end }}
@@ -185,6 +190,11 @@ spec:
           name: {{ $.Values.web.customWatermark.name }}
         name: watermark
       {{ end }}
+      {{- if $.Values.uvs.enable }}
+      - configMap:
+          name: {{ include "jitsi.name" $ }}-uvs-wellknown
+        name: uvs-wellknown
+      {{- end }}
     {{- if $.Values.web.extraVolumes }}
       {{- toYaml $.Values.web.extraVolumes | nindent 6 }}
     {{- end }}

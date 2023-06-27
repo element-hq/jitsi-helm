@@ -83,6 +83,13 @@ app.kubernetes.io/name: jitsi-sysctl-jvb
 app.kubernetes.io/component: jitsi-sysctl-setter
 {{- end -}}
 
+{{- define "jitsi.uvs.selectorLabels" -}}
+{{ include "jitsi.selectorLabels" . }}
+app.kubernetes.io/instance: {{ include "jitsi.name" . }}-uvs
+app.kubernetes.io/name: jitsi-uvs
+app.kubernetes.io/component: jitsi-access-controller
+{{- end -}}
+
 {{- define "jitsi.webShard.selectorLabels" -}}
 {{ include "jitsi.selectorLabels" . }}
 app.kubernetes.io/instance: {{ include "jitsi.name" . }}-web
@@ -197,6 +204,14 @@ app.kubernetes.io/component: jitsi-ingress
 {{- end }}
 {{- end -}}
 
+{{- define "jitsi.uvs.labels" -}}
+{{ include "jitsi.labels" . }}
+{{ include "jitsi.uvs.selectorLabels" . }}
+{{- with $.Values.uvs.extraLabels }}
+{{ toYaml .}}
+{{- end }}
+{{- end -}}
+
 {{- define "jitsi.webShard.labels" -}}
 {{ include "jitsi.labels" . }}
 {{ include "jitsi.webShard.selectorLabels" . }}
@@ -236,4 +251,8 @@ Define a helper function to create a hash of the output of the previous function
 
 {{- define "jitsi.sharedSecret.name" -}}
 {{ $.Values.secretName | default (include "jitsi.name" .) }}
+{{- end -}}
+
+{{- define "jitsi.uvsAccessTokenSecret.name" -}}
+{{ $.Values.uvs.secrets.accessTokenSecretName | default (include "jitsi.sharedSecret.name" .) }}
 {{- end -}}

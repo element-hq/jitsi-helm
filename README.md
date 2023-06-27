@@ -54,39 +54,40 @@ helm delete --purge jitsi
 
 The following table lists the configurable parameters of the Jitsi Meet chart and their default values.
 
-| Parameter                          | Description                                             | Default           |
-|------------------------------------|---------------------------------------------------------|-------------------|
-| `shardCount`                       | Number of shards                                        | `2`               |
-| `haproxy.image`                    | Docker image                                            | `haproxy:2.1`     |
-| `ingress.enabled`                  | Enable ingress                                          | `true`            |
-| `ingress.hosts`                    | List of hosts in this ingress                           | empty             |
-| `ingress.class  `                  | Which ingressClassName to use                           | empty             |
-| `ingress.tls.enabled`              | Enable TLS for ingress                                  | `true`            |
-| `ingress.tls.secretName`           | Name of the secret storing the TLS certificate and key  | `jitsi-tls`       |
-| `ingress.extraPaths    `           | Extra paths to add to the ingress                       | `[]`              |
-| `jicofo.image`                     | Jicofo docker image                                     | `jitsi/jicofo`    |
-| `jicofo.imagePullPolicy`           | Jicofo image pull policy                                | `Always`          |
-| `jicofo.extraEnvs`                 | Jicofo extra environment variables                      | `[]`              |
-| `jvb.image`                        | JVB docker image                                        | `jitsi/jvb`       |
-| `jvb.image.imagePullPolicy`        | JVB image pull policy                                   | `Always`          |
-| `jvb.replicas`                     | JVB replica count                                       | `1`               |
-| `jvb.monitoringEnable`             | JVB exporter container                                  | `true`            |
-| `jvb.hostPort`                     | JVB hostPort                                            | empty             |
-| `jvb.nodeportPrefix`               | JVB Node port prefix                                    | `30`              |
-| `jvb.extraEnvs`                    | JVB extra environment variables                         | `[]`              |
-| `prosody.image`                    | Prosody docker image                                    | `jitsi/prosody`   |
-| `prosody.image.imagePullPolicy`    | Prosody image pull policy                               | `Always`          |
-| `prosody.extraEnvs`                | Extra env var for prosody deployment                    | `[]`              |
-| `prosody.extraVolumes`             | Additionnal volumes to the prosody deployment           | `[]`              |
-| `prosody.extraVolumeMounts`        | Additional volume mounts to the prosody deployment      | `[]`              |
-| `prosody.globalModules`            | Additional global modules to enable on prosody          | `[]`              |
-| `prosody.globalConfig`             | Additional global config parameters on prosody          | `[]`              |
-| `web.image`                        | Web docker image                                        | `jitsi/web`       |
-| `web.image.imagePullPolicy`        | Web image pull policy                                   | `Always`          |
-| `web.extraEnvs`                    | Extra env var for web deployment                        | `[]`              |
-| `web.extraVolumes`                 | Additionnal volumes to the web deployment               | `[]`              |
-| `web.extraVolumeMounts`            | Additional volume mounts to the web deployment          | `[]`              |
-| `watermark`                        | Watermark logo                                          | `true`            |
+| Parameter                          | Description                                                    | Default           |
+|------------------------------------|----------------------------------------------------------------|-------------------|
+| `shardCount`                       | Number of shards                                               | `2`               |
+| `haproxy.image`                    | Docker image                                                   | `haproxy:2.1`     |
+| `ingress.enabled`                  | Enable ingress                                                 | `true`            |
+| `ingress.hosts`                    | List of hosts in this ingress                                  | empty             |
+| `ingress.class  `                  | Which ingressClassName to use                                  | empty             |
+| `ingress.tls.enabled`              | Enable TLS for ingress                                         | `true`            |
+| `ingress.tls.secretName`           | Name of the secret storing the TLS certificate and key         | `jitsi-tls`       |
+| `ingress.extraPaths    `           | Extra paths to add to the ingress                              | `[]`              |
+| `jicofo.image`                     | Jicofo docker image                                            | `jitsi/jicofo`    |
+| `jicofo.imagePullPolicy`           | Jicofo image pull policy                                       | `Always`          |
+| `jicofo.extraEnvs`                 | Jicofo extra environment variables                             | `[]`              |
+| `jvb.image`                        | JVB docker image                                               | `jitsi/jvb`       |
+| `jvb.image.imagePullPolicy`        | JVB image pull policy                                          | `Always`          |
+| `jvb.replicas`                     | JVB replica count                                              | `1`               |
+| `jvb.monitoringEnable`             | JVB exporter container                                         | `true`            |
+| `jvb.hostPort`                     | JVB hostPort                                                   | empty             |
+| `jvb.nodeportPrefix`               | JVB Node port prefix                                           | `30`              |
+| `jvb.extraEnvs`                    | JVB extra environment variables                                | `[]`              |
+| `prosody.image`                    | Prosody docker image                                           | `jitsi/prosody`   |
+| `prosody.image.imagePullPolicy`    | Prosody image pull policy                                      | `Always`          |
+| `prosody.extraEnvs`                | Extra env var for prosody deployment                           | `[]`              |
+| `prosody.extraVolumes`             | Additionnal volumes to the prosody deployment                  | `[]`              |
+| `prosody.extraVolumeMounts`        | Additional volume mounts to the prosody deployment             | `[]`              |
+| `prosody.globalModules`            | Additional global modules to enable on prosody                 | `[]`              |
+| `prosody.globalConfig`             | Additional global config parameters on prosody                 | `[]`              |
+| `uvs.enable`                       | Whether the Matrix User Verification Service should be enabled | `false`           |
+| `web.image`                        | Web docker image                                               | `jitsi/web`       |
+| `web.image.imagePullPolicy`        | Web image pull policy                                          | `Always`          |
+| `web.extraEnvs`                    | Extra env var for web deployment                               | `[]`              |
+| `web.extraVolumes`                 | Additionnal volumes to the web deployment                      | `[]`              |
+| `web.extraVolumeMounts`            | Additional volume mounts to the web deployment                 | `[]`              |
+| `watermark`                        | Watermark logo                                                 | `true`            |
 
 ## Running two jitsi instances inside the same cluster
 
