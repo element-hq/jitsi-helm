@@ -21,21 +21,24 @@ helm.sh/chart: {{ include "jitsi.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Values.managedBy | default .Release.Service }}
-app.kubernetes.io/part-of: jitsi-stack
 {{- end -}}
 
 {{/*
 Selector labels
 */}}
+{{- define "jitsi.selectorLabels" -}}
+app.kubernetes.io/part-of: jitsi-stack
+{{- end -}}
+
 {{- define "jitsi.haproxy.selectorLabels" -}}
-{{ include "jitsi.labels" . }}
+{{ include "jitsi.selectorLabels" . }}
 app.kubernetes.io/instance: {{ include "jitsi.name" . }}-haproxy
 app.kubernetes.io/name: jitsi-haproxy
 app.kubernetes.io/component: jitsi-load-balancer
 {{- end -}}
 
 {{- define "jitsi.jicofoShard.selectorLabels" -}}
-{{ include "jitsi.labels" . }}
+{{ include "jitsi.selectorLabels" . }}
 app.kubernetes.io/instance: {{ include "jitsi.name" . }}-jicofo
 app.kubernetes.io/name: jitsi-jicofo
 app.kubernetes.io/component: jitsi-conference-manager
@@ -43,24 +46,24 @@ shard: {{ toYaml .RelativeScope | quote }}
 {{- end -}}
 
 {{- define "jitsi.jvbGlobal.selectorLabels" -}}
-{{ include "jitsi.labels" . }}
+{{ include "jitsi.selectorLabels" . }}
 app.kubernetes.io/instance: {{ include "jitsi.name" . }}-jvb
 app.kubernetes.io/name: jitsi-jvb
 app.kubernetes.io/component: jitsi-selective-forwarding-unit
 {{- end -}}
 
 {{- define "jitsi.jvbShard.selectorLabels" -}}
-{{ include "jitsi.jvbGlobal.labels" . }}
+{{ include "jitsi.jvbGlobal.selectorLabels" . }}
 shard: {{ toYaml .RelativeScope.shard | quote }}
 {{- end -}}
 
 {{- define "jitsi.jvbReplica.selectorLabels" -}}
-{{ include "jitsi.jvbShard.labels" . }}
+{{ include "jitsi.jvbShard.selectorLabels" . }}
 replica: {{ toYaml .RelativeScope.replica | quote }}
 {{- end -}}
 
 {{- define "jitsi.prosodyGlobal.selectorLabels" -}}
-{{ include "jitsi.labels" . }}
+{{ include "jitsi.selectorLabels" . }}
 app.kubernetes.io/instance: {{ include "jitsi.name" . }}-prosody
 app.kubernetes.io/name: jitsi-prosody
 app.kubernetes.io/component: jitsi-coordinator
@@ -72,14 +75,14 @@ shard: {{ toYaml .RelativeScope | quote }}
 {{- end -}}
 
 {{- define "jitsi.sysctlJvb.selectorLabels" -}}
-{{ include "jitsi.labels" . }}
+{{ include "jitsi.selectorLabels" . }}
 app.kubernetes.io/instance: {{ include "jitsi.name" . }}-sysctl-jvb
 app.kubernetes.io/name: jitsi-sysctl-jvb
 app.kubernetes.io/component: jitsi-sysctl-setter
 {{- end -}}
 
 {{- define "jitsi.webShard.selectorLabels" -}}
-{{ include "jitsi.labels" . }}
+{{ include "jitsi.selectorLabels" . }}
 app.kubernetes.io/instance: {{ include "jitsi.name" . }}-web
 app.kubernetes.io/name: jitsi-web
 app.kubernetes.io/component: jitsi-web-server
@@ -87,6 +90,7 @@ shard: {{ toYaml .RelativeScope | quote }}
 {{- end -}}
 
 {{- define "jitsi.config.labels" -}}
+{{ include "jitsi.selectorLabels" . }}
 {{ include "jitsi.labels" . }}
 app.kubernetes.io/instance: {{ include "jitsi.name" . }}-config
 app.kubernetes.io/name: jitsi-config
@@ -104,6 +108,7 @@ app.kubernetes.io/component: jitsi-shared-config
 {{- end -}}
 
 {{- define "jitsi.ingress.labels" -}}
+{{ include "jitsi.selectorLabels" . }}
 {{ include "jitsi.labels" . }}
 app.kubernetes.io/instance: {{ include "jitsi.name" . }}-ingress
 app.kubernetes.io/name: jitsi-ingress
