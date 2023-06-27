@@ -36,6 +36,12 @@ spec:
     {{- with $.Values.jvb.extraPodSpec }}
       {{- toYaml . | nindent 6 }}
     {{- end }}
+    {{- if $.Values.jvb.imagePullSecrets }}
+      imagePullSecrets:
+      {{- range $secretName := $.Values.jvb.imagePullSecrets }}
+      - name: {{ $secretName }}
+      {{- end }}
+    {{- end }}
       containers:
       {{ if $.Values.jvb.monitoringEnable -}}
       - args:
