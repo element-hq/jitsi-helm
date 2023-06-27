@@ -41,6 +41,12 @@ spec:
     {{- else }}
       automountServiceAccountToken: false
     {{- end }}
+    {{- if $.Values.prosody.imagePullSecrets }}
+      imagePullSecrets:
+      {{- range $secretName := $.Values.prosody.imagePullSecrets }}
+      - name: {{ $secretName }}
+      {{- end }}
+    {{- end }}
       volumes:
         - name: prosody
           configMap:

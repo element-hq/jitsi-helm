@@ -38,6 +38,12 @@ spec:
     {{- else }}
       automountServiceAccountToken: false
     {{- end }}
+    {{- if $.Values.web.imagePullSecrets }}
+      imagePullSecrets:
+      {{- range $secretName := $.Values.web.imagePullSecrets }}
+      - name: {{ $secretName }}
+      {{- end }}
+    {{- end }}
       containers:
       - env:
         - name: DISABLE_HTTPS

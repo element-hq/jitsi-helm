@@ -37,6 +37,12 @@ spec:
       automountServiceAccountToken: false
     {{- end }}
       hostNetwork: yes
+    {{- if $.Values.sysctljvb.imagePullSecrets }}
+      imagePullSecrets:
+      {{- range $secretName := $.Values.sysctljvb.imagePullSecrets }}
+      - name: {{ $secretName }}
+      {{- end }}
+    {{- end }}
       containers:
       - name: sysctl-jvb
         image: {{ $.Values.sysctljvb.image }}

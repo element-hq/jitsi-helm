@@ -37,6 +37,12 @@ spec:
     {{- else }}
       automountServiceAccountToken: false
     {{- end }}
+    {{- if $.Values.jicofo.imagePullSecrets }}
+      imagePullSecrets:
+      {{- range $secretName := $.Values.jicofo.imagePullSecrets }}
+      - name: {{ $secretName }}
+      {{- end }}
+    {{- end }}
       containers:
       - env:
         - name: XMPP_SERVER
