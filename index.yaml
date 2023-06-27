@@ -3,6 +3,16 @@ entries:
   jitsi:
   - apiVersion: v2
     appVersion: stable-8615
+    created: "2023-06-27T15:11:52.121686101Z"
+    description: A Helm chart for Kubernetes
+    digest: 9ae29c7e391fdf5a7efeda2f2751dd2b6316fb501427fe95910f8d946d6ea555
+    name: jitsi
+    type: application
+    urls:
+    - https://github.com/vector-im/jitsi-helm/releases/download/jitsi-0.6.1/jitsi-0.6.1.tgz
+    version: 0.6.1
+  - apiVersion: v2
+    appVersion: stable-8615
     created: "2023-06-27T12:18:02.565791121Z"
     description: A Helm chart for Kubernetes
     digest: 1d167ac001f59c39d52a22b5e318066741f56446384d125dab375fa0856212f6
@@ -191,4 +201,4 @@ entries:
     urls:
     - https://github.com/vector-im/jitsi-helm/releases/download/jitsi-0.4.0/jitsi-0.4.0.tgz
     version: 0.4.0
-generated: "2023-06-27T12:18:02.565926831Z"
+generated: "2023-06-27T15:11:52.121830868Z"
