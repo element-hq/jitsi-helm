@@ -24,7 +24,9 @@ app.kubernetes.io/managed-by: {{ .Values.managedBy | default .Release.Service }}
 {{- end -}}
 
 {{/*
-Selector labels
+Selector labels. These should be constant across deploys for resources of the same name.
+If resources rename (i.e. nameOverride is set/changes), it is fine for these labels to
+change value.
 */}}
 {{- define "jitsi.selectorLabels" -}}
 app.kubernetes.io/part-of: jitsi-stack
@@ -89,9 +91,21 @@ app.kubernetes.io/component: jitsi-web-server
 shard: {{ toYaml .RelativeScope | quote }}
 {{- end -}}
 
+
+{{/*
+General labels. These should include all the corresponding selector labels
+and also include any labels that may change between standard deploys of the
+chart (e.g. upgrading so version number changes). They should also
+contain any user provided labels for the same reason.
+
+If there's (e.g.) global and shard label variants for the same component
+the shard label definition doesn't include the global one. This is because
+both will include the selctor labels and we don't want duplicates. So there
+is some unavoidable repetition here
+*/}}
 {{- define "jitsi.config.labels" -}}
-{{ include "jitsi.selectorLabels" . }}
 {{ include "jitsi.labels" . }}
+{{ include "jitsi.selectorLabels" . }}
 app.kubernetes.io/instance: {{ include "jitsi.name" . }}-config
 app.kubernetes.io/name: jitsi-config
 app.kubernetes.io/component: jitsi-shared-config
@@ -101,6 +115,7 @@ app.kubernetes.io/component: jitsi-shared-config
 {{- end -}}
 
 {{- define "jitsi.haproxy.labels" -}}
+{{ include "jitsi.labels" . }}
 {{ include "jitsi.haproxy.selectorLabels" . }}
 {{- with $.Values.haproxy.extraLabels }}
 {{ toYaml .}}
@@ -108,8 +123,8 @@ app.kubernetes.io/component: jitsi-shared-config
 {{- end -}}
 
 {{- define "jitsi.ingress.labels" -}}
-{{ include "jitsi.selectorLabels" . }}
 {{ include "jitsi.labels" . }}
+{{ include "jitsi.selectorLabels" . }}
 app.kubernetes.io/instance: {{ include "jitsi.name" . }}-ingress
 app.kubernetes.io/name: jitsi-ingress
 app.kubernetes.io/component: jitsi-ingress
@@ -119,6 +134,7 @@ app.kubernetes.io/component: jitsi-ingress
 {{- end -}}
 
 {{- define "jitsi.jicofoShard.labels" -}}
+{{ include "jitsi.labels" . }}
 {{ include "jitsi.jicofoShard.selectorLabels" . }}
 {{- with $.Values.jicofo.extraLabels }}
 {{ toYaml . }}
@@ -126,6 +142,7 @@ app.kubernetes.io/component: jitsi-ingress
 {{- end -}}
 
 {{- define "jitsi.jvbGlobal.labels" -}}
+{{ include "jitsi.labels" . }}
 {{ include "jitsi.jvbGlobal.selectorLabels" . }}
 {{- with $.Values.jvb.extraLabels }}
 {{ toYaml . }}
@@ -133,6 +150,7 @@ app.kubernetes.io/component: jitsi-ingress
 {{- end -}}
 
 {{- define "jitsi.jvbShard.labels" -}}
+{{ include "jitsi.labels" . }}
 {{ include "jitsi.jvbShard.selectorLabels" . }}
 {{- with $.Values.jvb.extraLabels }}
 {{ toYaml . }}
@@ -140,6 +158,7 @@ app.kubernetes.io/component: jitsi-ingress
 {{- end -}}
 
 {{- define "jitsi.jvbReplica.labels" -}}
+{{ include "jitsi.labels" . }}
 {{ include "jitsi.jvbReplica.selectorLabels" . }}
 {{- with $.Values.jvb.extraLabels }}
 {{ toYaml . }}
@@ -147,6 +166,7 @@ app.kubernetes.io/component: jitsi-ingress
 {{- end -}}
 
 {{- define "jitsi.jvbReplicaMonitoring.labels" -}}
+{{ include "jitsi.labels" . }}
 {{ include "jitsi.jvbReplica.selectorLabels" . }}
 {{- with $.Values.jvb.monitoring.service.extraLabels }}
 {{ toYaml . }}
@@ -154,6 +174,7 @@ app.kubernetes.io/component: jitsi-ingress
 {{- end -}}
 
 {{- define "jitsi.prosodyGlobal.labels" -}}
+{{ include "jitsi.labels" . }}
 {{ include "jitsi.prosodyGlobal.selectorLabels" . }}
 {{- with $.Values.prosody.extraLabels }}
 {{ toYaml . }}
@@ -161,6 +182,7 @@ app.kubernetes.io/component: jitsi-ingress
 {{- end -}}
 
 {{- define "jitsi.prosodyShard.labels" -}}
+{{ include "jitsi.labels" . }}
 {{ include "jitsi.prosodyShard.selectorLabels" . }}
 {{- with $.Values.prosody.extraLabels }}
 {{ toYaml . }}
@@ -168,6 +190,7 @@ app.kubernetes.io/component: jitsi-ingress
 {{- end -}}
 
 {{- define "jitsi.sysctlJvb.labels" -}}
+{{ include "jitsi.labels" . }}
 {{ include "jitsi.sysctlJvb.selectorLabels" . }}
 {{- with $.Values.sysctljvb.extraLabels }}
 {{ toYaml .}}
@@ -175,6 +198,7 @@ app.kubernetes.io/component: jitsi-ingress
 {{- end -}}
 
 {{- define "jitsi.webShard.labels" -}}
+{{ include "jitsi.labels" . }}
 {{ include "jitsi.webShard.selectorLabels" . }}
 {{- with $.Values.web.extraLabels }}
 {{ toYaml . }}
