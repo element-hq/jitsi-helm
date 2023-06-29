@@ -37,7 +37,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels: {{ include "jitsi.haproxy.selectorLabels" $ | nindent 16 }}
-            topologyKey: topology.kubernetes.io/zone
+            topologyKey: kubernetes.io/hostname
     {{- if $.Values.haproxy.imagePullSecrets }}
       imagePullSecrets:
       {{- range $secretName := $.Values.haproxy.imagePullSecrets }}
