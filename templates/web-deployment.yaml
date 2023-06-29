@@ -44,6 +44,14 @@ spec:
       - name: {{ $secretName }}
       {{- end }}
     {{- end }}
+    {{- if gt ($.Values.web.replicas | int) 1 }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels: {{ include "jitsi.webShard.selectorLabels" (merge (dict "RelativeScope" .) $) | nindent 16 }}
+            topologyKey: kubernetes.io/hostname
+    {{- end }}
       containers:
       - env:
         - name: DISABLE_HTTPS
