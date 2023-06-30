@@ -1,0 +1,15 @@
+{{ if $.Values.uvs.enable -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "jitsi.name" $ }}-uvs
+  namespace: {{ $.Release.Namespace }}
+  labels: {{ include "jitsi.uvs.labels" $ | nindent 4 }}
+spec:
+  ports:
+  - name: http
+    port: 3000
+    targetPort: http
+  selector: {{ include "jitsi.uvs.selectorLabels" $ | nindent 6 }}
+  type: ClusterIP
+{{ end -}}

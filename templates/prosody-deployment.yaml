@@ -181,6 +181,27 @@ spec:
                 configMapKeyRef:
                   name: {{ include "jitsi.sharedConfigMap.name" $ }}
                   key: PUBLIC_URL
+          {{- if $.Values.uvs.enable }}
+            - name: ENABLE_AUTH
+              value: "1"
+            - name: AUTH_TYPE
+              value: "matrix"
+            - name: MATRIX_UVS_URL
+              value: "{{ include "jitsi.name" $ }}-uvs.{{ $.Release.Namespace }}.svc.cluster.local"
+            - name: MATRIX_UVS_ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "jitsi.sharedConfigMap.name" $ }}
+                  key: PUBLIC_URL
+            - name: MATRIX_UVS_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: UVS_AUTH_TOKEN
+                  name: {{ include "jitsi.sharedSecret.name" $ }}
+                  optional: false
+            - name: MATRIX_UVS_SYNC_POWER_LEVELS
+              value: "{{ $.Values.uvs.syncPowerLevels }}"
+          {{- end }}
           {{- if $.Values.prosody.extraEnvs }}
             {{- toYaml $.Values.prosody.extraEnvs | nindent 12 }}
           {{- end }}

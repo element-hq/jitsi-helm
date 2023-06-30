@@ -1,0 +1,111 @@
+{{ if $.Values.uvs.enable -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: {{ include "jitsi.uvs.labels" $ | nindent 4 }}
+  annotations:
+    configmap-hash: {{ include "jitsi.sharedConfigMap.hash" $ }}
+  {{- with $.Values.uvs.extraAnnotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  name: {{ include "jitsi.name" $ }}-uvs
+  namespace: {{ $.Release.Namespace }}
+spec:
+  replicas: {{ $.Values.uvs.replicas }}
+  selector:
+    matchLabels: {{ include "jitsi.uvs.selectorLabels" $ | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels: {{ include "jitsi.uvs.labels" $ | nindent 8 }}
+      annotations:
+        configmap-hash: {{ include "jitsi.sharedConfigMap.hash" $ }}
+      {{- with $.Values.uvs.extraAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with $.Values.uvs.extraPodSpec }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- if (($.Values.global).serviceAccount) }}
+      serviceAccountName: {{ (($.Values.global).serviceAccount) }}
+    {{- else }}
+      automountServiceAccountToken: false
+    {{- end }}
+    {{- if gt ($.Values.uvs.replicas | int) 1 }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels: {{ include "jitsi.uvs.selectorLabels" $ | nindent 16 }}
+            topologyKey: kubernetes.io/hostname
+    {{- end }}
+    {{- if $.Values.uvs.imagePullSecrets }}
+      imagePullSecrets:
+      {{- range $secretName := $.Values.uvs.imagePullSecrets }}
+      - name: {{ $secretName }}
+      {{- end }}
+    {{- end }}
+      containers:
+      - name: uvs
+        ports:
+        - containerPort: 3000
+          name: http
+          protocol: TCP
+        env:
+        - name: UVS_HOMESERVER_URL
+          value: "{{ $.Values.uvs.homeserverUrl }}"
+        - name: UVS_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: UVS_ACCESS_TOKEN
+              name: {{ include "jitsi.uvsAccessTokenSecret.name" $ }}
+              optional: false
+        - name: UVS_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: UVS_AUTH_TOKEN
+              name: {{ include "jitsi.sharedSecret.name" $ }}
+              optional: false
+        - name: UVS_DISABLE_IP_BLACKLIST
+          value: "{{ $.Values.uvs.canQueryPrivateIps }}"
+        - name: UVS_LISTEN_ADDRESS
+          value: 0.0.0.0
+        - name: UVS_PORT
+          value: "3000"
+        image: {{ $.Values.uvs.image}}
+        imagePullPolicy: {{ $.Values.uvs.imagePullPolicy }}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 2
+          periodSeconds: 3
+      {{- with $.Values.uvs.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+      {{- end }}
+      {{- if $.Values.uvs.extraVolumeMounts }}
+        volumeMounts:
+        {{- toYaml $.Values.uvs.extraVolumeMounts | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.uvs.extraContainerSpec }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- if $.Values.uvs.extraVolumes }}
+      volumes:
+      {{- toYaml $.Values.uvs.extraVolumes | nindent 6 }}
+    {{- end }}
+{{ end -}}
