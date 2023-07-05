@@ -115,7 +115,7 @@ uvs:
   enable: false
   canQueryPrivateIps: false
   syncPowerLevels: true
-  image: matrixdotorg/matrix-user-verification-service:v2.0.0
+  image: matrixdotorg/matrix-user-verification-service:v3.0.0
   imagePullPolicy: Always
   replicas: 2
   resources:
