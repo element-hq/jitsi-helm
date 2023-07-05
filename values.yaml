@@ -131,6 +131,7 @@ uvs:
   extraContainerSpec: {}
   extraLabels: {}
   extraAnnotations: {}
+  # homeserverUrl - URL of the Synapse to verify room membership with
   secrets: {}
     # ACCESS_TOKEN - provides access to Synapse
     # accessTokenSecretName - the above in a separate secret with the key UVS_ACCESS_TOKEN present
