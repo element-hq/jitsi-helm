@@ -124,6 +124,7 @@ uvs:
       cpu: 50m
     limits:
       memory: 300Mi
+  extraEnvs: []
   extraPodSpec: {}
   extraVolumes: []
   extraVolumeMounts: []
