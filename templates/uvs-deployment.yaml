@@ -77,6 +77,9 @@ spec:
           value: 0.0.0.0
         - name: UVS_PORT
           value: "3000"
+      {{- if $.Values.uvs.extraEnvs }}
+        {{- toYaml $.Values.uvs.extraEnvs | nindent 8 }}
+      {{- end }}
         image: {{ $.Values.uvs.image}}
         imagePullPolicy: {{ $.Values.uvs.imagePullPolicy }}
         livenessProbe:

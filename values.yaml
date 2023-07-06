@@ -115,7 +115,7 @@ uvs:
   enable: false
   canQueryPrivateIps: false
   syncPowerLevels: true
-  image: matrixdotorg/matrix-user-verification-service:v2.0.0
+  image: matrixdotorg/matrix-user-verification-service:v3.0.0
   imagePullPolicy: Always
   replicas: 2
   resources:
@@ -124,12 +124,14 @@ uvs:
       cpu: 50m
     limits:
       memory: 300Mi
+  extraEnvs: []
   extraPodSpec: {}
   extraVolumes: []
   extraVolumeMounts: []
   extraContainerSpec: {}
   extraLabels: {}
   extraAnnotations: {}
+  # homeserverUrl - URL of the Synapse to verify room membership with
   secrets: {}
     # ACCESS_TOKEN - provides access to Synapse
     # accessTokenSecretName - the above in a separate secret with the key UVS_ACCESS_TOKEN present
