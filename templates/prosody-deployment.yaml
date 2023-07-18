@@ -187,7 +187,7 @@ spec:
             - name: AUTH_TYPE
               value: "matrix"
             - name: MATRIX_UVS_URL
-              value: "{{ include "jitsi.name" $ }}-uvs.{{ $.Release.Namespace }}.svc.cluster.local"
+              value: "http://{{ include "jitsi.name" $ }}-uvs.{{ $.Release.Namespace }}.svc.cluster.local:3000"
             - name: MATRIX_UVS_ISSUER
               valueFrom:
                 configMapKeyRef:
