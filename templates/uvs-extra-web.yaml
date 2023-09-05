@@ -1,0 +1,14 @@
+{{ if $.Values.uvs.enable -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "jitsi.name" $ }}-uvs-extra-web
+  namespace: {{ $.Release.Namespace }}
+  labels: {{ include "jitsi.uvs.labels" $ | nindent 4 }}
+data:
+  well-known: "{\"auth\": \"openidtoken-jwt\"}"
+  custom-meet.conf: |
+    location = /.well-known/element/jitsi {
+        default_type application/json;
+    }
+{{ end -}}
