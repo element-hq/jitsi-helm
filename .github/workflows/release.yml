@@ -11,7 +11,7 @@ jobs:
     # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     permissions:
       contents: write
-    runs-on: non-dind
+    runs-on: cpu-s
     container: ubuntu
     steps:
 
