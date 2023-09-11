@@ -9,7 +9,7 @@ on:
 
 jobs:
   lint-test:
-    runs-on: cpu-s
+    runs-on: cpu-l
     container: ubuntu
     steps:
       - name: Configure deps
