@@ -21,7 +21,7 @@ jobs:
           apt install -y unzip curl git
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -32,17 +32,19 @@ jobs:
           git config --global --add safe.directory  "$GITHUB_WORKSPACE"
 
       - name: Install Helm
-        uses: azure/setup-helm@v3
+        uses: azure/setup-helm@v3.5
 
       - name: Helm package
         run: |
           mkdir .cr-release-packages
           helm package .
           mv ./jitsi-*.tgz ./.cr-release-packages/
+
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
+        uses: helm/chart-releaser-action@v1.6.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_GENERATE_RELEASE_NOTES: true
         with:
           charts_dir: .
           skip_packaging: true
