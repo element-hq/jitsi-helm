@@ -236,7 +236,7 @@ app.kubernetes.io/component: jitsi-ingress
 Define a helper function to output the data of the shared ConfigMap
 */}}
 {{- define "jitsi.sharedConfigMap.data" -}}
-JVB_STUN_SERVERS: {{ $.Values.JVB_STUN_SERVERS }}
+JVB_STUN_SERVERS: {{ $.Values.JVB_STUN_SERVERS | quote }}
 PUBLIC_URL: {{ ((gt (len $.Values.ingress.hosts) 0) | ternary (print "https://" ($.Values.ingress.hosts | first)) $.Values.PUBLIC_URL) | required "One of PUBLIC_URL or ingress.hosts must be provided" }}
 TZ: {{ $.Values.TZ }}
 {{- end }}
