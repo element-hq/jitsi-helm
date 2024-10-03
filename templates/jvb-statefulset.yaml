@@ -17,7 +17,7 @@ spec:
   replicas: {{ $.Values.jvb.replicas }}
   selector:
     matchLabels: {{ include "jitsi.jvbShard.selectorLabels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 6 }}
-  serviceName: jvb
+  serviceName: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-jvb
   template:
     metadata:
       labels: {{ include "jitsi.jvbShard.labels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 8 }}

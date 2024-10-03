@@ -1,4 +1,20 @@
 {{- range $shard, $e := until (int $.Values.shardCount) }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels: {{ include "jitsi.jvbShard.labels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 4 }}
+  name: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-jvb
+  namespace: {{ $.Release.Namespace }}
+spec:
+  clusterIP: None
+  type: ClusterIP
+  ports:
+  - name: "metrics"
+    protocol: "TCP"
+    port: 9888
+    targetPort: metrics
+  selector: {{ include "jitsi.jvbShard.selectorLabels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 4 }}
 {{- range $replica, $f := until (int $.Values.jvb.replicas) }}
 {{ if empty $.Values.jvb.hostPort }}
 ---
@@ -21,26 +37,5 @@ spec:
     statefulset.kubernetes.io/pod-name: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-jvb-{{ $replica }}
     {{ include "jitsi.jvbShard.labels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 4 }}
 {{ end -}}
----
-apiVersion: v1
-kind: Service
-metadata:
-{{ with $.Values.jvb.monitoring.service.extraAnnotations }}
-  annotations:
-    {{ toYaml . | nindent 4 }}
-{{ end }}
-  labels: {{ include "jitsi.jvbReplicaMonitoring.labels" (merge (dict "RelativeScope" (dict "shard" $shard "replica" $replica)) $) | nindent 4 }}
-  name: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-jvb-{{ $replica }}-metrics
-  namespace: {{ $.Release.Namespace }}
-spec:
-  type: ClusterIP
-  ports:
-  - name: "metrics"
-    protocol: "TCP"
-    port: 9888
-    targetPort: metrics
-  selector:
-    statefulset.kubernetes.io/pod-name: {{ include "jitsi.name" $ }}-shard-{{ $shard }}-jvb-{{ $replica }}
-    {{ include "jitsi.jvbShard.labels" (merge (dict "RelativeScope" (dict "shard" $shard)) $) | nindent 4 }}
 {{ end -}}
 {{ end -}}
