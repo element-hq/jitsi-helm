@@ -15,7 +15,7 @@ metadata:
   namespace: {{ $.Release.Namespace }}
 spec:
   selector:
-    matchLabels: {{ include "jitsi.sysctlJvb.labels" $ | nindent 6 }}
+    matchLabels: {{ include "jitsi.sysctlJvb.selectorLabels" $ | nindent 6 }}
   template:
     metadata:
       labels: {{ include "jitsi.sysctlJvb.labels" $ | nindent 8 }}
