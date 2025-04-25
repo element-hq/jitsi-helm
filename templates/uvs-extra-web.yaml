@@ -10,5 +10,6 @@ data:
   custom-meet.conf: |
     location = /.well-known/element/jitsi {
         default_type application/json;
+        add_header 'Access-Control-Allow-Origin' '*';
     }
 {{ end -}}
