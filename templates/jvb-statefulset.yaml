@@ -152,6 +152,20 @@ spec:
         - name: VIDEOBRIDGE_MAX_MEMORY
           value: {{ $heapSize }}M
       {{- end }}
+      {{- if $.Values.octo.enabled }}
+        - name: ENABLE_OCTO
+          value: "true"
+        - name: JVB_OCTO_REGION
+          value: {{ $.Values.octo.region | default "all" | quote }}
+        - name: JVB_OCTO_BIND_ADDRESS
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: JVB_OCTO_RELAY_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+      {{- end }}
       {{- if $.Values.jvb.extraEnvs }}
         {{- toYaml $.Values.jvb.extraEnvs | nindent 8 }}
       {{- end }}

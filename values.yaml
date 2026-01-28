@@ -176,6 +176,9 @@ sysctljvb:
   extraContainerSpec: {}
   extraLabels: {}
   extraAnnotations: {}
+octo:
+  enabled: false
+  region: "all"
 
 createSecret: true
 JICOFO_AUTH_PASSWORD: ""
