@@ -74,6 +74,12 @@ spec:
           value: jvbbrewery
         - name: JICOFO_ENABLE_HEALTH_CHECKS
           value: "true"
+      {{- if $.Values.octo.enabled }}
+        - name: ENABLE_OCTO
+          value: "true"
+        - name: OCTO_BRIDGE_SELECTION_STRATEGY
+          value: "RegionBasedBridgeSelectionStrategy"
+      {{- end }}
       {{- if $.Values.jicofo.extraEnvs }}
         {{- toYaml $.Values.jicofo.extraEnvs | nindent 8 }}
       {{- end }}

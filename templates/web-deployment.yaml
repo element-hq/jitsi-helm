@@ -82,6 +82,12 @@ spec:
             configMapKeyRef:
               name: {{ include "jitsi.sharedConfigMap.name" $ }}
               key: PUBLIC_URL
+      {{- if $.Values.octo.enabled }}
+        - name: ENABLE_OCTO
+          value: "true"
+        - name: DEPLOYMENTINFO_REGION
+          value: {{ $.Values.octo.region | default "all" | quote }}
+      {{- end }}
       {{- if $.Values.web.extraEnvs }}
         {{- toYaml $.Values.web.extraEnvs | nindent 8 }}
       {{- end }}
